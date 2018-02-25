@@ -10,10 +10,11 @@
 #include <sstream>
 
 namespace RTOS {
+	
 	class RosComponent {
 	public:
 		RosComponent();
-		RosComponent(std::)
+		RosComponent(std::string tname);
 		~RosComponent();
 		void send_data();
 	private:

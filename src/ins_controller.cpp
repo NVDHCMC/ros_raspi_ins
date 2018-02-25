@@ -2,6 +2,7 @@
 #include "std_msgs/String.h"
 #include "rtos_util.hpp"
 #include "RosComponent.hpp"
+#include "RaspiLowLevel.hpp"
 #include <sstream>
 
 int ResultIncValue = 0;
