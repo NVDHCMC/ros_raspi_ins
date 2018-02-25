@@ -29,7 +29,6 @@ namespace RTOS {
 		this->ss << "loop number " << random_value << ".";
 		this->msg.data = this->ss.str();
 
-		this->ins_message.
 		this->ins_message.gyro_x = 0;
 		this->ins_message.gyro_y = 0;
 		this->ins_message.gyro_z = 0;
@@ -41,7 +40,7 @@ namespace RTOS {
 		this->ins_message.magnetic_z = 0;
 
 		this->crap_data.publish(this->msg);
-		this->ins_data.publish(this->ins_message)
+		this->ins_data.publish(this->ins_message);
 		ros::spinOnce();
 	}
 }
