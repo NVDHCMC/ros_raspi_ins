@@ -58,7 +58,7 @@ namespace RASPI {
 
 	bool RaspiLowLevel::init_stm32() {
 		bool rv = true;
-		if !(this->spi_init) {
+		if (!this->spi_init) {
 			std::cout << "The SPI module wasn't properly initialized." << std::endl;
 		}
 		else {
@@ -67,7 +67,7 @@ namespace RASPI {
         	uint8_t i = 0;
 
         	for(i = 0; i < 11; i++) {
-        		if (this->stm32_init_string[i] != this->stm32_receive_string) {
+        		if (this->stm32_init_string[i] != this->stm32_receive_string[i]) {
         			rv = false;
         			break;
         		}

@@ -51,6 +51,7 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
   FILES
   Num.msg
+  Ins.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -199,8 +200,8 @@ include_directories(
 
 execute_process(COMMAND xeno-config --skin=alchemy --ldflags OUTPUT_VARIABLE XENOMAI_LDFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
 execute_process(COMMAND xeno-config --skin=alchemy --cflags OUTPUT_VARIABLE XENOMAI_CFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${XENOMAI_CFLAGS}")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${XENOMAI_CFLAGS}")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${XENOMAI_CFLAGS} -std=c11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${XENOMAI_CFLAGS} -std=c++11")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${XENOMAI_LDFLAGS} -lpthread -lbcm2835 -lboost_filesystem")
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${XENOMAI_LDFLAGS} -lpthread -lbcm2835 -lboost_filesystem")
 

@@ -3,6 +3,7 @@
 #include "rtos_util.hpp"
 #include "RosComponent.hpp"
 #include "RaspiLowLevel.hpp"
+#include "ins_controller/Ins.h"
 #include <sstream>
 
 int ResultIncValue = 0;
@@ -32,7 +33,7 @@ int main(int argc, char ** argv) {
 
 	// Construct and init a new RosComponent class shared pointer
 	pRosComp.reset(new RTOS::RosComponent());
-	pRaspiLLHandle.reset(new RTOS::RaspiLowLevel());
+	pRaspiLLHandle.reset(new RASPI::RaspiLowLevel());
 
 	pRaspiLLHandle->init_spi();
 	pRaspiLLHandle->init_stm32();

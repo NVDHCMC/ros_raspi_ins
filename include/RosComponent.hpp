@@ -8,6 +8,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include "ins_controller/Ins.h"
 
 namespace RTOS {
 	
@@ -25,8 +26,11 @@ namespace RTOS {
 		std::stringstream ss;
 	
 		ros::NodeHandle ins_node;
-		ros::Publisher ins_data;
+		ros::Publisher crap_data;
 		std_msgs::String msg;
+
+		ins_controller::Ins ins_message;
+		ros::Publisher ins_data;
 	};
 
 }
