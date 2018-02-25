@@ -4,7 +4,7 @@
 
 #include "ros/ros.h"
 #include <bcm2835.h>
-#include <stdint>
+#include <stdint.h>
 #include <iostream>
 #include <vector>
 
@@ -17,7 +17,7 @@ namespace RASPI {
 		bool init_spi();
 		bool init_gpio(uint16_t pins);
 	private:
-		std::vector<uint16_t> buffer (255, 0);
+		std::vector<uint16_t> buffer;
 	};
 }
 

@@ -3,7 +3,7 @@
 #include "RosComponent.hpp"
 
 
-namespace {
+namespace RTOS {
 	// ROS component constructor
 	RosComponent::RosComponent() {
 		this->topic_name = "chatter";
@@ -23,6 +23,7 @@ namespace {
 	RosComponent::~RosComponent() {}
 	
 	void RosComponent::send_data() {
+		this->ss.flush();
 		this->ss << "loop number " << random_value << ".";
 		this->msg.data = this->ss.str();
 			

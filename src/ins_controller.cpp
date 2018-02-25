@@ -17,7 +17,7 @@ void * MySimpleTask( void * dummy )
 	while( RTOS::ThreadRunning )
 	{
 		RTOS::WaitPeriodicPosixTask( );
-		pRosComp->send();
+		pRosComp->send_data();
 		ResultIncValue++;
 	}
 	return 0;

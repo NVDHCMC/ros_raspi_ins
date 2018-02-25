@@ -197,7 +197,7 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
-execute_process(COMMAND xeno-config --skin=alchemy --ldflags --auto-init-solib OUTPUT_VARIABLE XENOMAI_LDFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
+execute_process(COMMAND xeno-config --skin=alchemy --ldflags OUTPUT_VARIABLE XENOMAI_LDFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
 execute_process(COMMAND xeno-config --skin=alchemy --cflags OUTPUT_VARIABLE XENOMAI_CFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${XENOMAI_CFLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${XENOMAI_CFLAGS}")
@@ -207,6 +207,8 @@ set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${XENOMAI_LDFLAGS} -
 add_executable(
     ins_controller 
     src/fosi.cpp
+    src/RosComponent.cpp
+    src/RaspiLowLevel.cpp
     src/ins_controller.cpp
 )
 target_link_libraries(ins_controller ${catkin_LIBRARIES})
