@@ -211,7 +211,11 @@ add_executable(
     src/RaspiLowLevel.cpp
     src/ins_controller.cpp
 )
-target_link_libraries(ins_controller ${catkin_LIBRARIES})
+target_link_libraries(
+    ins_controller
+    ${catkin_LIBRARIES}
+    /usr/local/lib/libbcm2835.a
+)
 
 add_executable(listener src/listener.cpp)
 target_link_libraries(listener ${catkin_LIBRARIES})
