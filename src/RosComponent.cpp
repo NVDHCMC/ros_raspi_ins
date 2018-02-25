@@ -23,7 +23,7 @@ namespace RTOS {
 	RosComponent::~RosComponent() {}
 	
 	void RosComponent::send_data() {
-		this->ss.flush();
+		this->ss.clear();
 		this->ss << "loop number " << random_value << ".";
 		this->msg.data = this->ss.str();
 			
