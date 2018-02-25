@@ -7,8 +7,8 @@
 int ResultIncValue = 0;
 #define PERIOD_MICROSECS 10000 //10 millisecs
 
-typedef boost::shared_ptr<RosComponent> pRosComponent;
-boost::shared_ptr<RosComponent> pRosComp;
+typedef boost::shared_ptr<RTOS::RosComponent> pRosComponent;
+boost::shared_ptr<RTOS::RosComponent> pRosComp;
 
 void * MySimpleTask( void * dummy )
 {
@@ -27,7 +27,7 @@ int main(int argc, char ** argv) {
 	ros::init(argc, argv, "talker");
 
 	// Construct and init a new RosComponent class shared pointer
-	pRosComp.reset(new RosComponent());
+	pRosComp.reset(new RTOS::RosComponent());
 
 	// Create a new Xenomai RT POSIX thread
 	int err;
