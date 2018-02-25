@@ -22,10 +22,10 @@ namespace RASPI {
 	private:
 		bool init;
 		bool spi_init;
-		char stm32_init_string[11];
-		char stm32_receive_string[11];
-		char raw_spi_data[10];
-		char dummy_string[10];
+		int stm32_init_string[10];
+		int stm32_receive_string[10];
+		int raw_spi_data[10];
+		int dummy_string[10];
 		std::vector<uint16_t> buffer;
 	};
 
