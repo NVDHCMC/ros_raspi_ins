@@ -11,7 +11,6 @@
 namespace RASPI {
 	class RaspiLowLevel
 	{
-		std::vector<float> ins_data;
 	public:
 		RaspiLowLevel();
 		~RaspiLowLevel();
@@ -20,6 +19,8 @@ namespace RASPI {
 		bool init_stm32();
 		bool pair_stm32();
 		void fetch_data_from_stm32(std::vector<float> * data);
+		void command_stm32();
+		std::vector<float> ins_data;
 	private:
 		bool init;
 		bool spi_init;

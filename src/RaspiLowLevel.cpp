@@ -83,7 +83,7 @@ namespace RASPI {
 	bool RaspiLowLevel::pair_stm32() {
 		bool rv = true;
 		uint8_t i = 0;
-		if (this->init_stm32)
+		if (this->init_stm32())
 		{
 			bcm2835_spi_transfern((char *) this->stm32_pair_string, 10);
 			sleep(0.1);
@@ -119,7 +119,7 @@ namespace RASPI {
 
 		for ( i = 0; i < 9; i++ ) {
 
-			data->at(i) = (float) (((float) raw_spi_data[2*i]) << 8) + ((float) raw_spi_data[2*i + 1]);
+			data->at(i) = (float) (((uint16_t) raw_spi_data[2*i]) << 8) + ((uint16_t) raw_spi_data[2*i + 1]);
 			std::cout << data->at(i);
 		}
 		std::cout << std::endl;
