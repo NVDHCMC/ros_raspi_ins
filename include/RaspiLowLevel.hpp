@@ -11,6 +11,7 @@
 namespace RASPI {
 	class RaspiLowLevel
 	{
+		std::vector<float> ins_data;
 	public:
 		RaspiLowLevel();
 		~RaspiLowLevel();
@@ -24,8 +25,10 @@ namespace RASPI {
 		bool spi_init;
 		int stm32_init_string[10];
 		int stm32_receive_string[10];
-		int raw_spi_data[10];
-		int dummy_string[10];
+		int stm32_pair_string[10];
+		int stm32_accept_string[10];
+		int raw_spi_data[20];
+		int dummy_string[20];
 		std::vector<uint16_t> buffer;
 	};
 

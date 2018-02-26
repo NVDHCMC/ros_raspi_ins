@@ -28,6 +28,13 @@ void * MySimpleTask( void * dummy )
 }
 
 int main(int argc, char ** argv) {
+	
+	printf("Simple periodic thread using Posix.\n");
+#if defined( __XENO__ ) || defined( __COBALT__ )
+	printf("Version compiled for Xenomai 2 or 3.\n");
+	mlockall(MCL_CURRENT | MCL_FUTURE);
+#endif
+
 	// Initialize ros with input params
 	ros::init(argc, argv, "talker");
 
@@ -38,13 +45,14 @@ int main(int argc, char ** argv) {
 	pRaspiLLHandle->init_spi();
 	pRaspiLLHandle->init_stm32();
 	pRaspiLLHandle->pair_stm32();
+	pRaspiLLHandle->fetch_data_from_stm32(&pRaspiLLHandle->ins_data);
 
 	// Create a new Xenomai RT POSIX thread
 	int err;
 	
-	err = RTOS::CreatePosixTask( "DemoPosix", 1/*Priority*/, 16/*StackSizeInKo*/, PERIOD_MICROSECS/*PeriodMicroSecs*/, MySimpleTask );
+	//err = RTOS::CreatePosixTask( "DemoPosix", 1/*Priority*/, 16/*StackSizeInKo*/, PERIOD_MICROSECS/*PeriodMicroSecs*/, MySimpleTask );
 	
-	if ( err!=0 )
+	/*if ( err!=0 )
 	{
 		printf( "Init task error (%d)!\n",err );
 	}
@@ -55,7 +63,7 @@ int main(int argc, char ** argv) {
 		} while (std::cin.get() != 27); 
 
 		RTOS::ThreadRunning = 0;
-	}
+	}*/
 	
 	return 0;
 	

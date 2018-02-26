@@ -25,9 +25,9 @@ namespace RTOS {
 	RosComponent::~RosComponent() {}
 	
 	void RosComponent::send_data() {
-		this->ss.clear();
-		this->ss << "loop number " << random_value << ".";
-		this->msg.data = this->ss.str();
+		std::stringstream ss;
+		ss << "loop number " << random_value << ".";
+		this->msg.data = ss.str();
 
 		this->ins_message.gyro_x = 0;
 		this->ins_message.gyro_y = 0;

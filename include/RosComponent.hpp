@@ -23,7 +23,6 @@ namespace RTOS {
 		int buffer_length;
 	
 		std::string topic_name;
-		std::stringstream ss;
 	
 		ros::NodeHandle ins_node;
 		ros::Publisher crap_data;
