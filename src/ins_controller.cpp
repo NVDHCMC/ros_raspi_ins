@@ -36,10 +36,10 @@ int main(int argc, char ** argv) {
 #endif
 
 	// Initialize ros with input params
-	ros::init(argc, argv, "talker");
+	//ros::init(argc, argv, "talker");
 
 	// Construct and init a new RosComponent class shared pointer
-	pRosComp.reset(new RTOS::RosComponent());
+	//pRosComp.reset(new RTOS::RosComponent());
 	pRaspiLLHandle.reset(new RASPI::RaspiLowLevel());
 
 	pRaspiLLHandle->init_spi();

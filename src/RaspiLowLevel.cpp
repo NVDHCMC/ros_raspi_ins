@@ -65,9 +65,9 @@ namespace RASPI {
         	uint8_t i = 0;
 
         	for ( i = 0; i < 10; i++ ) {
-        		std::cout << this->stm32_receive_string[i];
+        		printf("%c", this->stm32_receive_string[i]);
         	}
-        	std::cout << std::endl;
+        	printf("\n");
 
         	for(i = 0; i < 10; i++) {
         		if (this->stm32_init_string[i] != this->stm32_receive_string[i]) {
@@ -99,9 +99,9 @@ namespace RASPI {
 
         	for ( i = 0; i < 10; i++ ) {
         		this->dummy_string[i] = 0x00;
-        		std::cout << this->stm32_receive_string[i];
+        		printf("%c", this->stm32_receive_string[i]);
         	}
-        	std::cout << std::endl;
+        	printf("\n");
 
 		}
 		return rv;
@@ -120,9 +120,9 @@ namespace RASPI {
 		for ( i = 0; i < 9; i++ ) {
 
 			data->at(i) = (float) (((uint16_t) raw_spi_data[2*i]) << 8) + ((uint16_t) raw_spi_data[2*i + 1]);
-			std::cout << data->at(i);
+			printf("%f ", data->at(i));
 		}
-		std::cout << std::endl;
+		printf("\n");
 	}
 
 	void RaspiLowLevel::command_stm32() {
