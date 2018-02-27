@@ -19,7 +19,6 @@ namespace RASPI {
 	}
 
 	RaspiLowLevel::~RaspiLowLevel() {
-		bcm2835_spi_end();
 	}
 
 	bool RaspiLowLevel::init_spi() {
