@@ -61,7 +61,7 @@ namespace RASPI {
 			rv = false;
 		}
 		else {
-			char * temp_str[11];
+			char temp_str[11];
 			memcpy(temp_str, this->stm32_init_string, 11);
         	
         	bcm2835_spi_transfern(temp_str, 11);
@@ -69,7 +69,7 @@ namespace RASPI {
         	uint8_t i = 0;
 
         	for(i = 0; i < 11; i++) {
-        		if (this->stm32_init_string[i] != this->stm32_receive_string[i]) {
+        		if (this->stm32_init_string[i] != temp_str[i]) {
         			rv = false;
         			break;
         		}
@@ -88,7 +88,7 @@ namespace RASPI {
 		uint8_t i = 0;
 		if (this->init_stm32())
 		{
-			char * temp_str[11];
+			char temp_str[11];
 
 			memcpy(temp_str, this->stm32_pair_string, 11);
 			sleep(0.5);
@@ -99,7 +99,7 @@ namespace RASPI {
 			bcm2835_spi_transfern(temp_str, 11);
 
 			for(i = 0; i < 11; i++) {
-        		if (this->stm32_accept_string[i] != temp_str) {
+        		if (this->stm32_accept_string[i] != temp_str[i]) {
         			rv = false;
         			break;
         		}
@@ -115,7 +115,7 @@ namespace RASPI {
 
 	void RaspiLowLevel::fetch_data_from_stm32(std::vector<float> * data) {
 
-		char * temp_str[21];
+		char temp_str[21];
 		memcpy(temp_str, this->dummy_string, 21);
 		bcm2835_spi_transfern(temp_str, 21);
 
