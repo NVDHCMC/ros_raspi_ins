@@ -42,8 +42,8 @@ int main(int argc, char ** argv) {
 	//pRosComp.reset(new RTOS::RosComponent());
 	pRaspiLLHandle.reset(new RASPI::RaspiLowLevel());
 
+	// Initialize SPI periph and pairing with stm32
 	pRaspiLLHandle->init_spi();
-	pRaspiLLHandle->init_stm32();
 	pRaspiLLHandle->pair_stm32();
 	//pRaspiLLHandle->fetch_data_from_stm32(&pRaspiLLHandle->ins_data);
 

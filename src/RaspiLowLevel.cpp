@@ -10,7 +10,7 @@ namespace RASPI {
 		dummy_string{0x00} {
 		// Initialize bcm2835 low-level api
 		if (!bcm2835_init()) {
-			std::cout << "Could not initialize raspberry pi low level hardware." << std::endl;
+			std::cout << "-- [ERROR]: Could not initialize raspberry pi low level hardware." << std::endl;
 			this->init = false;
 		}
 		else {
@@ -19,7 +19,7 @@ namespace RASPI {
 	}
 
 	RaspiLowLevel::~RaspiLowLevel() {
-
+		bcm2835_spi_end();
 	}
 
 	bool RaspiLowLevel::init_spi() {
@@ -28,7 +28,7 @@ namespace RASPI {
 		{
 			this->spi_init = false;
 			rv = false;
-			printf("bcm2835_spi_begin failed. Are you running as root??\n");
+			printf("-- [ERROR]: BCM2835_spi_begin failed. Are you running as root??\n");
 		}
 		else {
 			this->spi_init = true;
@@ -57,17 +57,16 @@ namespace RASPI {
 	bool RaspiLowLevel::init_stm32() {
 		bool rv = true;
 		if (!this->spi_init) {
-			std::cout << "The SPI module wasn't properly initialized." << std::endl;
+			std::cout << "-- [ERROR]: The SPI module was not initialized." << std::endl;
+			rv = false;
 		}
 		else {
-        	bcm2835_spi_transfern((char *) this->stm32_init_string, 11);
+			char * temp_str[11];
+			memcpy(temp_str, this->stm32_init_string, 11);
+        	
+        	bcm2835_spi_transfern(temp_str, 11);
 
         	uint8_t i = 0;
-
-        	for ( i = 1; i < 11; i++ ) {
-        		printf("%c", this->stm32_init_string[i]);
-        	}
-        	printf("\n");
 
         	for(i = 0; i < 11; i++) {
         		if (this->stm32_init_string[i] != this->stm32_receive_string[i]) {
@@ -75,7 +74,11 @@ namespace RASPI {
         			break;
         		}
         	}
-        	rv = true;
+
+        	if (rv == true) 
+        	{
+        		printf("-- [INFO]: Complete STM32 initialization. \n");
+        	}
 		}
 		return rv;
 	}
@@ -85,40 +88,41 @@ namespace RASPI {
 		uint8_t i = 0;
 		if (this->init_stm32())
 		{
-			bcm2835_spi_transfern((char *) this->stm32_pair_string, 11);
-			sleep(0.1);
-			bcm2835_spi_transfern((char *) this->dummy_string, 11);
+			char * temp_str[11];
 
-			memcpy(this->stm32_receive_string, this->dummy_string, 11);
+			memcpy(temp_str, this->stm32_pair_string, 11);
+			sleep(0.5);
+			bcm2835_spi_transfern(temp_str, 11);
+
+			memcpy(temp_str, this->dummy_string, 11);
+			sleep(0.5);
+			bcm2835_spi_transfern(temp_str, 11);
+
 			for(i = 0; i < 11; i++) {
-        		if (this->stm32_accept_string[i] != this->stm32_receive_string[i]) {
+        		if (this->stm32_accept_string[i] != temp_str) {
         			rv = false;
         			break;
         		}
         	}
 
-        	for ( i = 0; i < 11; i++ ) {
-        		this->dummy_string[i] = 0x00;
-        		printf("%c", this->stm32_receive_string[i]);
-        	}
-        	printf("\n");
+			if (rv == true) {
+				printf("-- [INFO]: Paired with STM32.\n");
+			}
 
 		}
 		return rv;
 	}
 
 	void RaspiLowLevel::fetch_data_from_stm32(std::vector<float> * data) {
-		bcm2835_spi_transfern((char *) this->dummy_string, 21);
 
-		memcpy(this->raw_spi_data, this->dummy_string, 21);
+		char * temp_str[21];
+		memcpy(temp_str, this->dummy_string, 21);
+		bcm2835_spi_transfern(temp_str, 21);
+
+		memcpy(this->raw_spi_data, temp_str, 21);
 
 		uint8_t i = 0;
-		for ( i = 0; i < 21; i++) {
-			this->dummy_string[i] = 0x00;
-		}
-
 		for ( i = 0; i < 9; i++ ) {
-
 			data->at(i) = (float) (((uint16_t) raw_spi_data[2*i]) << 8) + ((uint16_t) raw_spi_data[2*i + 1]);
 			printf("%f ", data->at(i));
 		}
