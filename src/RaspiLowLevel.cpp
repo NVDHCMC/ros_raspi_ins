@@ -2,10 +2,10 @@
 
 namespace RASPI {
 	RaspiLowLevel::RaspiLowLevel() : buffer(255, 0), ins_data(9, 0),
-		stm32_init_string{0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
-		stm32_receive_string{0xff, 'H', 'e', 'l', 'l', 'o', ',', 'R', 'P', 'I'},
-		stm32_pair_string{0xff, 'S', 'T', 'M', '3', '2', 'F', '4', '0', '7'},
-		stm32_accept_string{0x43, 0x85, 0x31, 0x77, 0x8c, 0xc4, 0x8e, 0xc9, 0x4b, 0x11},
+		stm32_init_string{0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+		stm32_receive_string{0xff, 'H', 'e', 'l', 'l', 'o', ',', 'R', 'P', 'I', 0x00},
+		stm32_pair_string{0xff, 'S', 'T', 'M', '3', '2', 'F', '4', '0', '7', 0x00},
+		stm32_accept_string{0x43, 0x85, 0x31, 0x77, 0x8c, 0xc4, 0x8e, 0xc9, 0x4b, 0x11, 0x00},
 		raw_spi_data{0x00},
 		dummy_string{0x00} {
 		// Initialize bcm2835 low-level api
@@ -38,7 +38,7 @@ namespace RASPI {
     		// Select mode 0: Clock Polarity = 0; Clock Phase = 0;
     		bcm2835_spi_setDataMode(BCM2835_SPI_MODE0);
     		// Set the channel's speed to 12.5 MHz (RPi 3)      
-    		bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_2048);
+    		bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_64);
     		// Set up CS pin
     		bcm2835_spi_chipSelect(BCM2835_SPI_CS0);
     		// Set CS pin active state
@@ -60,16 +60,16 @@ namespace RASPI {
 			std::cout << "The SPI module wasn't properly initialized." << std::endl;
 		}
 		else {
-        	bcm2835_spi_transfern((char *) this->stm32_init_string, 10);
+        	bcm2835_spi_transfern((char *) this->stm32_init_string, 11);
 
         	uint8_t i = 0;
 
-        	for ( i = 0; i < 10; i++ ) {
-        		printf("%c", this->stm32_receive_string[i]);
+        	for ( i = 1; i < 11; i++ ) {
+        		printf("%c", this->stm32_init_string[i]);
         	}
         	printf("\n");
 
-        	for(i = 0; i < 10; i++) {
+        	for(i = 0; i < 11; i++) {
         		if (this->stm32_init_string[i] != this->stm32_receive_string[i]) {
         			rv = false;
         			break;
@@ -85,19 +85,19 @@ namespace RASPI {
 		uint8_t i = 0;
 		if (this->init_stm32())
 		{
-			bcm2835_spi_transfern((char *) this->stm32_pair_string, 10);
+			bcm2835_spi_transfern((char *) this->stm32_pair_string, 11);
 			sleep(0.1);
-			bcm2835_spi_transfern((char *) this->dummy_string, 10);
+			bcm2835_spi_transfern((char *) this->dummy_string, 11);
 
-			memcpy(this->stm32_receive_string, this->dummy_string, 10);
-			for(i = 0; i < 10; i++) {
+			memcpy(this->stm32_receive_string, this->dummy_string, 11);
+			for(i = 0; i < 11; i++) {
         		if (this->stm32_accept_string[i] != this->stm32_receive_string[i]) {
         			rv = false;
         			break;
         		}
         	}
 
-        	for ( i = 0; i < 10; i++ ) {
+        	for ( i = 0; i < 11; i++ ) {
         		this->dummy_string[i] = 0x00;
         		printf("%c", this->stm32_receive_string[i]);
         	}
@@ -108,12 +108,12 @@ namespace RASPI {
 	}
 
 	void RaspiLowLevel::fetch_data_from_stm32(std::vector<float> * data) {
-		bcm2835_spi_transfern((char *) this->dummy_string, 20);
+		bcm2835_spi_transfern((char *) this->dummy_string, 21);
 
-		memcpy(this->raw_spi_data, this->dummy_string, 20);
+		memcpy(this->raw_spi_data, this->dummy_string, 21);
 
 		uint8_t i = 0;
-		for ( i = 0; i < 20; i++) {
+		for ( i = 0; i < 21; i++) {
 			this->dummy_string[i] = 0x00;
 		}
 

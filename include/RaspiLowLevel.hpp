@@ -24,12 +24,12 @@ namespace RASPI {
 	private:
 		bool init;
 		bool spi_init;
-		int stm32_init_string[10];
-		int stm32_receive_string[10];
-		int stm32_pair_string[10];
-		int stm32_accept_string[10];
-		int raw_spi_data[20];
-		int dummy_string[20];
+		int stm32_init_string[11];
+		int stm32_receive_string[11];
+		int stm32_pair_string[11];
+		int stm32_accept_string[11];
+		int raw_spi_data[21];
+		int dummy_string[21];
 		std::vector<uint16_t> buffer;
 	};
 

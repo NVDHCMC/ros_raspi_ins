@@ -45,7 +45,7 @@ int main(int argc, char ** argv) {
 	pRaspiLLHandle->init_spi();
 	pRaspiLLHandle->init_stm32();
 	pRaspiLLHandle->pair_stm32();
-	pRaspiLLHandle->fetch_data_from_stm32(&pRaspiLLHandle->ins_data);
+	//pRaspiLLHandle->fetch_data_from_stm32(&pRaspiLLHandle->ins_data);
 
 	// Create a new Xenomai RT POSIX thread
 	int err;
