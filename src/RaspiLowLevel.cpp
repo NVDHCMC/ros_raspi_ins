@@ -126,7 +126,7 @@ namespace RASPI {
 				data->at(i) = (float) (((uint16_t) this->raw_spi_data[2*i]) << 8) + ((uint16_t) this->raw_spi_data[2*i + 1]);
 			}
 			else {
-				data->at(i) = ((float) (((uint16_t) this->raw_spi_data[2*i + 1]) << 8) + ((uint16_t) this->raw_spi_data[2*i]))/0.6f;
+				data->at(i) = ((float) (((uint16_t) this->raw_spi_data[2*i + 1]) << 8) + ((uint16_t) this->raw_spi_data[2*i]))*0.6f;
 			}
 			
 			if (i < 3) {
@@ -134,8 +134,7 @@ namespace RASPI {
 			}
 
 			if (i == 3) {
-				data->at(i) /= 338.0f;
-				data->at(i) += 21.0f;
+				data->at(i) /= 333.86670f;
 			}
 
 			if ((i > 3) && (i < 7)) {
