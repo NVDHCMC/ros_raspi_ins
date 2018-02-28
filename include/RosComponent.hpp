@@ -17,7 +17,7 @@ namespace RTOS {
 		RosComponent();
 		RosComponent(std::string tname);
 		~RosComponent();
-		void send_data();
+		void send_data(std::vector<float> RPY);
 	private:
 		int random_value;
 		int buffer_length;
