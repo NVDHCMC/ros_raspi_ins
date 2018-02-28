@@ -123,10 +123,12 @@ namespace RASPI {
 		uint8_t i = 0;
 		for ( i = 0; i < 10; i++ ) {
 			if ( i < 7 ) {
-				data->at(i) = (float) (((uint16_t) raw_spi_data[2*i]) << 8) + ((uint16_t) raw_spi_data[2*i + 1]);
+				data->at(i) = (float) (((uint16_t) this->raw_spi_data[2*i]) << 8) + ((uint16_t) this->raw_spi_data[2*i + 1]);
+				printf("%f ", data->at(i));
 			}
 			else {
-				data->at(i) = ((float) (((uint16_t) raw_spi_data[2*i + 1]) << 8) + ((uint16_t) raw_spi_data[2*i]))/0.6f;
+				data->at(i) = ((float) (((uint16_t) this->raw_spi_data[2*i + 1]) << 8) + ((uint16_t) this->raw_spi_data[2*i]))/0.6f;
+				printf("%f ", data->at(i));
 			}
 			
 			if (i < 3) {
