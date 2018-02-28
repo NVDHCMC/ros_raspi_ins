@@ -122,7 +122,7 @@ namespace RASPI {
 
 		uint8_t i = 0;
 		for ( i = 0; i < 10; i++ ) {
-			if (( i < 2 ) && (i > 4)) {
+			if ( i < 7 ) {
 				data->at(i) = (float) ((int16_t) ( (( (uint16_t) this->raw_spi_data[2*i] )*256) + ( (uint16_t) this->raw_spi_data[2*i + 1]) ));
 			}
 			else {
@@ -130,15 +130,15 @@ namespace RASPI {
 				data->at(i) = data->at(i)*0.6f;
 			}
 			
-			if ((i > 4) && (i < 8)) {
+			if (i < 3) {
 				data->at(i) /= 16384.0f;
 			}
 
-			if (i == 8) {
+			if (i == 3) {
 				data->at(i) /= 333.86670f;
 			}
 
-			if ((i > 8) && (i < 2)) {
+			if ((i > 3) && (i < 7)) {
 				data->at(i) /= 131.0f;
 			}
 			printf("%f ", data->at(i));
