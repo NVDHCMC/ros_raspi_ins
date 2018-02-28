@@ -98,6 +98,11 @@ namespace RASPI {
 			bcm2835_spi_transfern(temp_str, 10);
 
 			for(i = 0; i < 10; i++) {
+				printf("%x " temp_str[i]);
+			}
+			printf("\n");
+			
+			for(i = 0; i < 10; i++) {
         		if (this->stm32_accept_string[i] != temp_str[i]) {
         			rv = false;
         			break;
