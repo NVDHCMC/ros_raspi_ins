@@ -135,7 +135,7 @@ namespace RASPI {
 				data->at(i) /= 131.0f;
 			}
 
-			if (i = 3) {
+			if (i == 3) {
 				data->at(i) /= 338.0f;
 				data->at(i) += 21.0f;
 			}
