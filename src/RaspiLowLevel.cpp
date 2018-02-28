@@ -37,7 +37,7 @@ namespace RASPI {
     		// Select mode 0: Clock Polarity = 0; Clock Phase = 0;
     		bcm2835_spi_setDataMode(BCM2835_SPI_MODE0);
     		// Set the channel's speed to 12.5 MHz (RPi 3)      
-    		bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_256);
+    		bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_128);
     		// Set up CS pin
     		bcm2835_spi_chipSelect(BCM2835_SPI_CS0);
     		// Set CS pin active state
@@ -60,10 +60,10 @@ namespace RASPI {
 			rv = false;
 		}
 		else {
-			char temp_str[11];
-			memcpy(temp_str, this->stm32_init_string, 11);
+			char temp_str[10];
+			memcpy(temp_str, this->stm32_init_string, 10);
         	
-        	bcm2835_spi_transfern(temp_str, 11);
+        	bcm2835_spi_transfern(temp_str, 10);
 
         	uint8_t i = 0;
 
@@ -87,20 +87,15 @@ namespace RASPI {
 		uint8_t i = 0;
 		if (this->init_stm32())
 		{
-			char temp_str[11];
+			char temp_str[10];
 
-			memcpy(temp_str, this->stm32_pair_string, 11);
-			sleep(0.5);
+			memcpy(temp_str, this->stm32_pair_string, 10);
+			sleep(1);
 			bcm2835_spi_transfern(temp_str, 10);
 
-			memcpy(temp_str, this->dummy_string, 11);
-			sleep(0.5);
+			memcpy(temp_str, this->dummy_string, 10);
+			sleep(1);
 			bcm2835_spi_transfern(temp_str, 10);
-
-			for(i = 0; i < 10; i++) {
-				printf("%x ", temp_str[i]);
-			}
-			printf("\n");
 
 			for(i = 0; i < 10; i++) {
         		if (this->stm32_accept_string[i] != temp_str[i]) {
@@ -149,9 +144,9 @@ namespace RASPI {
 			if ((i > 3) && (i < 7)) {
 				data->at(i) /= 131.0f;
 			}
-			printf("%f ", data->at(i));
+			//printf("%f ", data->at(i));
 		}
-		printf("\n");
+		//printf("\n");
 	}
 
 	void RaspiLowLevel::command_stm32() {

@@ -24,7 +24,7 @@ namespace RTOS {
 	// ROS component destructor
 	RosComponent::~RosComponent() {}
 	
-	void RosComponent::send_data() {
+	void RosComponent::send_data(std::vector<float> RPY) {
 		std::stringstream ss;
 		ss << "loop number " << random_value << ".";
 		this->msg.data = ss.str();

@@ -4,6 +4,7 @@
 #include "RosComponent.hpp"
 #include "RaspiLowLevel.hpp"
 #include "ins_controller/Ins.h"
+#include "MahonyAHRS.h"
 #include <sstream>
 
 uint32_t ResultIncValue = 0;
@@ -12,15 +13,24 @@ uint32_t ResultIncValue = 0;
 typedef boost::shared_ptr<RTOS::RosComponent> pRosComponent;
 boost::shared_ptr<RTOS::RosComponent> pRosComp;
 boost::shared_ptr<RASPI::RaspiLowLevel> pRaspiLLHandle;
+boost::shared_ptr<Mahony> pMahonyFilter;
 
 void * MySimpleTask( void * dummy )
 {
 	int i = 0;
 	std::vector<float> ins_data (10, 0);
+	std::vector<float> RPY (3, 0);
 	while( RTOS::ThreadRunning )
 	{
 		RTOS::WaitPeriodicPosixTask( );
 		pRaspiLLHandle->fetch_data_from_stm32(&pRaspiLLHandle->ins_data);
+		pMahonyFilter->update(pRaspiLLHandle->ins_data[4], pRaspiLLHandle->ins_data[5], pRaspiLLHandle->ins_data[6], 
+			pRaspiLLHandle->ins_data[0], pRaspiLLHandle->ins_data[1], pRaspiLLHandle->ins_data[2], 
+			pRaspiLLHandle->ins_data[7], pRaspiLLHandle->ins_data[8], pRaspiLLHandle->ins_data[9]);
+		RPY.at(0) = pMahonyFilter->getRoll();
+		RPY.at(1) = pMahonyFilter->getPitch();
+		RPY.at(2) = pMahonyFilter->getYaw();
+
 		//pRosComp->send_data();
 		ResultIncValue++;
 	}
@@ -36,21 +46,21 @@ int main(int argc, char ** argv) {
 #endif
 
 	// Initialize ros with input params
-	//ros::init(argc, argv, "talker");
+	ros::init(argc, argv, "talker");
 
 	// Construct and init a new RosComponent class shared pointer
-	//pRosComp.reset(new RTOS::RosComponent());
+	pRosComp.reset(new RTOS::RosComponent());
 	pRaspiLLHandle.reset(new RASPI::RaspiLowLevel());
+	pMahonyFilter.reset(new Mahony());
 
 	// Initialize SPI periph and pairing with stm32
 	pRaspiLLHandle->init_spi();
-	pRaspiLLHandle->pair_stm32();
-	//pRaspiLLHandle->fetch_data_from_stm32(&pRaspiLLHandle->ins_data);
 
 	// Create a new Xenomai RT POSIX thread
 	sleep(0.5);
 	if (pRaspiLLHandle->pair_stm32()) {
 		int err;
+		std::cin.get();
 		err = RTOS::CreatePosixTask( "DemoPosix", 1/*Priority*/, 16/*StackSizeInKo*/, PERIOD_MICROSECS/*PeriodMicroSecs*/, MySimpleTask );
 		if ( err!=0 ) {
 			printf( "Init task error (%d)!\n",err );
