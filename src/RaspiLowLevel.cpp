@@ -123,10 +123,10 @@ namespace RASPI {
 		uint8_t i = 0;
 		for ( i = 0; i < 10; i++ ) {
 			if ( i < 7 ) {
-				data->at(i) = (float) (((uint16_t) this->raw_spi_data[2*i]) << 8) + ((uint16_t) this->raw_spi_data[2*i + 1]);
+				data->at(i) = (float) (((int16_t) this->raw_spi_data[2*i]) << 8) + ((uint16_t) this->raw_spi_data[2*i + 1]);
 			}
 			else {
-				data->at(i) = ((float) (((uint16_t) this->raw_spi_data[2*i + 1]) << 8) + ((uint16_t) this->raw_spi_data[2*i]));
+				data->at(i) = ((float) (((int16_t) this->raw_spi_data[2*i + 1]) << 8) + ((uint16_t) this->raw_spi_data[2*i]));
 				data->at(i) = data->at(i)*0.6f;
 			}
 			
