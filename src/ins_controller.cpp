@@ -48,7 +48,7 @@ int main(int argc, char ** argv) {
 	//pRaspiLLHandle->fetch_data_from_stm32(&pRaspiLLHandle->ins_data);
 
 	// Create a new Xenomai RT POSIX thread
-	std::cin.get();
+	sleep(0.5);
 	if (pRaspiLLHandle->pair_stm32()) {
 		int err;
 		err = RTOS::CreatePosixTask( "DemoPosix", 1/*Priority*/, 16/*StackSizeInKo*/, PERIOD_MICROSECS/*PeriodMicroSecs*/, MySimpleTask );

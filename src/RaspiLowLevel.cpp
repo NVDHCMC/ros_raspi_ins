@@ -109,6 +109,9 @@ namespace RASPI {
 			}
 
 		}
+		else {
+			rv = false;
+		}
 		return rv;
 	}
 
