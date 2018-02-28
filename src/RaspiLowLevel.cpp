@@ -91,7 +91,7 @@ namespace RASPI {
 
 			memcpy(temp_str, this->stm32_pair_string, 11);
 			sleep(0.5);
-			bcm2835_spi_transfern(temp_str, 10);
+			bcm2835_spi_transfern(temp_str, 11);
 
 			memcpy(temp_str, this->dummy_string, 11);
 			sleep(0.5);
