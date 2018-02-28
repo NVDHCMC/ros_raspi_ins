@@ -68,7 +68,7 @@ namespace RASPI {
         	uint8_t i = 0;
 
         	for(i = 0; i < 10; i++) {
-        		if (this->stm32_receive_string[i] != temp_str[i + 1]) {
+        		if (this->stm32_receive_string[i] != temp_str[i]) {
         			rv = false;
         			break;
         		}
@@ -91,7 +91,7 @@ namespace RASPI {
 
 			memcpy(temp_str, this->stm32_pair_string, 11);
 			sleep(0.5);
-			bcm2835_spi_transfern(temp_str, 11);
+			bcm2835_spi_transfern(temp_str, 10);
 
 			memcpy(temp_str, this->dummy_string, 11);
 			sleep(0.5);
