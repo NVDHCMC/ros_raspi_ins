@@ -211,6 +211,7 @@ add_executable(
     src/RosComponent.cpp
     src/RaspiLowLevel.cpp
     src/ins_controller.cpp
+    src/MahonyAHRS.cpp
 )
 target_link_libraries(
     ins_controller
