@@ -6,7 +6,7 @@
 #include "ins_controller/Ins.h"
 #include <sstream>
 
-int ResultIncValue = 0;
+uint32_t ResultIncValue = 0;
 #define PERIOD_MICROSECS 10000 //10 millisecs
 
 typedef boost::shared_ptr<RTOS::RosComponent> pRosComponent;
@@ -20,8 +20,8 @@ void * MySimpleTask( void * dummy )
 	while( RTOS::ThreadRunning )
 	{
 		RTOS::WaitPeriodicPosixTask( );
-		//pRaspiLLHandle->fetch_data_from_stm32(&ins_data);
-		pRosComp->send_data();
+		pRaspiLLHandle->fetch_data_from_stm32(&pRaspiLLHandle->ins_data);
+		//pRosComp->send_data();
 		ResultIncValue++;
 	}
 	return 0;
@@ -50,20 +50,22 @@ int main(int argc, char ** argv) {
 	// Create a new Xenomai RT POSIX thread
 	int err;
 	
-	//err = RTOS::CreatePosixTask( "DemoPosix", 1/*Priority*/, 16/*StackSizeInKo*/, PERIOD_MICROSECS/*PeriodMicroSecs*/, MySimpleTask );
+	err = RTOS::CreatePosixTask( "DemoPosix", 1/*Priority*/, 16/*StackSizeInKo*/, PERIOD_MICROSECS/*PeriodMicroSecs*/, MySimpleTask );
 	
-	/*if ( err!=0 )
+	if ( err!=0 )
 	{
 		printf( "Init task error (%d)!\n",err );
 	}
 	else
 	{
-		do {
-			std::cout << "Press ESC to stop."; 
-		} while (std::cin.get() != 27); 
+		printf("Press ESC to stop.\n"); 
+		while (std::cin.get() != 27)
+		{
+			sleep(0.5);
+		}
 
 		RTOS::ThreadRunning = 0;
-	}*/
+	}
 	
 	return 0;
 	
