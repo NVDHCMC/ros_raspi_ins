@@ -1,7 +1,7 @@
 #include "RaspiLowLevel.hpp"
 
 namespace RASPI {
-	RaspiLowLevel::RaspiLowLevel() : buffer(255, 0), ins_data(9, 0),
+	RaspiLowLevel::RaspiLowLevel() : buffer(255, 0), ins_data(10, 0),
 		stm32_init_string{0xff, 'H', 'e', 'l', 'l', 'o', ',', 'S', 'T', 'M', 0x00},
 		stm32_receive_string{0xff, 'h', 'e', 'l', 'l', 'o', ',', 'R', 'P', 'i', 0x00},
 		stm32_pair_string{0xff, 'S', 'T', 'M', '3', '2', 'F', '4', '0', '7', 0x00},
@@ -124,11 +124,9 @@ namespace RASPI {
 		for ( i = 0; i < 10; i++ ) {
 			if ( i < 7 ) {
 				data->at(i) = (float) (((uint16_t) this->raw_spi_data[2*i]) << 8) + ((uint16_t) this->raw_spi_data[2*i + 1]);
-				printf("%f ", data->at(i));
 			}
 			else {
 				data->at(i) = ((float) (((uint16_t) this->raw_spi_data[2*i + 1]) << 8) + ((uint16_t) this->raw_spi_data[2*i]))/0.6f;
-				printf("%f ", data->at(i));
 			}
 			
 			if (i < 3) {
