@@ -175,9 +175,9 @@ namespace RASPI {
 		for(int i = 0; i < 9; i++) {
 			this->acc_err.at(i) +=this->ins_data.at(i);
 			this->ins_bias.at(i) = this->acc_err.at(i)/( (float) this->sample_count );
-			if (i == 2) {
+			/*if (i == 2) {
 				this->ins_bias.at(i) += 1.0f;
-			}
+			}*/
 		}
 	}
 
