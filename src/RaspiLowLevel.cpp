@@ -1,7 +1,7 @@
 #include "RaspiLowLevel.hpp"
 
 namespace RASPI {
-	RaspiLowLevel::RaspiLowLevel() : buffer(255, 0), ins_data(10, 0), ins_bias(6, 0), acc_err(6, 0),
+	RaspiLowLevel::RaspiLowLevel() : buffer(255, 0), ins_data(10, 0), ins_bias(9, 0), acc_err(9, 0),
 		stm32_init_string{0xff, 'H', 'e', 'l', 'l', 'o', ',', 'S', 'T', 'M', 0x00},
 		stm32_receive_string{0xff, 'h', 'e', 'l', 'l', 'o', ',', 'R', 'P', 'i', 0x00},
 		stm32_pair_string{0xff, 'S', 'T', 'M', '3', '2', 'F', '4', '0', '7', 0x00},
