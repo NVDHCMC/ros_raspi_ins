@@ -20,19 +20,26 @@ void * MySimpleTask( void * dummy )
 	int i = 0;
 	std::vector<float> ins_data (10, 0);
 	std::vector<float> RPY (3, 0);
+	bool calibrated = false;
 	while( RTOS::ThreadRunning )
 	{
 		RTOS::WaitPeriodicPosixTask( );
-		pRaspiLLHandle->fetch_data_from_stm32(&pRaspiLLHandle->ins_data);
-		pMahonyFilter->updateIMU(pRaspiLLHandle->ins_data[4], pRaspiLLHandle->ins_data[5], pRaspiLLHandle->ins_data[6], 
-			pRaspiLLHandle->ins_data[0], pRaspiLLHandle->ins_data[1], pRaspiLLHandle->ins_data[2]);	 
-			//pRaspiLLHandle->ins_data[7], pRaspiLLHandle->ins_data[8], pRaspiLLHandle->ins_data[9]);
-		RPY.at(0) = pMahonyFilter->getRoll();
-		RPY.at(1) = pMahonyFilter->getPitch();
-		RPY.at(2) = pMahonyFilter->getYaw();
-		printf("%f %f %f \n", RPY.at(0), RPY.at(1), RPY.at(2));
-		//pRosComp->send_data();
-		ResultIncValue++;
+		if (i < 100) {
+			i++;
+			pRaspiLLHandle->calibrate();
+		}
+		else {
+			pRaspiLLHandle->fetch_data_from_stm32(&pRaspiLLHandle->ins_data, true);
+			pMahonyFilter->updateIMU(pRaspiLLHandle->ins_data[3], pRaspiLLHandle->ins_data[4], pRaspiLLHandle->ins_data[5], 
+				pRaspiLLHandle->ins_data[0], pRaspiLLHandle->ins_data[1], pRaspiLLHandle->ins_data[2]);	 
+				//pRaspiLLHandle->ins_data[7], pRaspiLLHandle->ins_data[8], pRaspiLLHandle->ins_data[9]);
+			RPY.at(0) = pMahonyFilter->getRoll();
+			RPY.at(1) = pMahonyFilter->getPitch();
+			RPY.at(2) = pMahonyFilter->getYaw();
+			printf("%f %f %f \n", RPY.at(0), RPY.at(1), RPY.at(2));
+			//pRosComp->send_data();
+			ResultIncValue++;
+		}
 	}
 	return 0;
 }
