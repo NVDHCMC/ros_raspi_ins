@@ -33,6 +33,7 @@ namespace RASPI {
 		uint8_t raw_spi_data[21];
 		uint8_t dummy_string[21];
 		uint32_t sample_count;
+		std::vector<float> acc_err;
 		std::vector<uint16_t> buffer;
 	};
 
