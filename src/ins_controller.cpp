@@ -24,13 +24,13 @@ void * MySimpleTask( void * dummy )
 	{
 		RTOS::WaitPeriodicPosixTask( );
 		pRaspiLLHandle->fetch_data_from_stm32(&pRaspiLLHandle->ins_data);
-		pMahonyFilter->update(pRaspiLLHandle->ins_data[4], pRaspiLLHandle->ins_data[5], pRaspiLLHandle->ins_data[6], 
-			pRaspiLLHandle->ins_data[0], pRaspiLLHandle->ins_data[1], pRaspiLLHandle->ins_data[2], 
-			pRaspiLLHandle->ins_data[7], pRaspiLLHandle->ins_data[8], pRaspiLLHandle->ins_data[9]);
+		pMahonyFilter->updateIMU(pRaspiLLHandle->ins_data[4], pRaspiLLHandle->ins_data[5], pRaspiLLHandle->ins_data[6], 
+			pRaspiLLHandle->ins_data[0], pRaspiLLHandle->ins_data[1], pRaspiLLHandle->ins_data[2]); 
+			//pRaspiLLHandle->ins_data[7], pRaspiLLHandle->ins_data[8], pRaspiLLHandle->ins_data[9]);
 		RPY.at(0) = pMahonyFilter->getRoll();
 		RPY.at(1) = pMahonyFilter->getPitch();
 		RPY.at(2) = pMahonyFilter->getYaw();
-
+		printf("%f %f %f \n", PRY.at(0), PRY.at(1), PRY.at(2));
 		//pRosComp->send_data();
 		ResultIncValue++;
 	}
@@ -55,6 +55,8 @@ int main(int argc, char ** argv) {
 
 	// Initialize SPI periph and pairing with stm32
 	pRaspiLLHandle->init_spi();
+
+	pMahonyFilter->begin(100);
 
 	// Create a new Xenomai RT POSIX thread
 	sleep(0.5);
