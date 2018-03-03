@@ -45,7 +45,8 @@ void * magnetometer_calibration_task( void * dummy) {
 		RTOS::WaitPeriodicPosixTask();
 
 		if (i < 60000) {
-			i++; 
+			i++;
+			printf("%d\n", i);
 			pRaspiLLHandle->calibrate_magnetometer();
 		}
 		else {
@@ -102,7 +103,7 @@ int main(int argc, char ** argv) {
 			printf("-- [INFO]: Writing calibration data to file.\n");
 			
 			accel_calibration_file.open("/home/pi/accel_calib.txt");
-			gyro_calibration_file.open("/home/pi/accel_calib.txt");
+			gyro_calibration_file.open("/home/pi/gyro_calib.txt");
 			log_file.open("/home/pi/imu_log.txt", std::ios::out | std::ios::app);
 
 			// Writing accelerometer calibration data to file.
