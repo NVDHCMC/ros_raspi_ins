@@ -44,9 +44,8 @@ void * magnetometer_calibration_task( void * dummy) {
 	while ( RTOS::ThreadRunning ) {
 		RTOS::WaitPeriodicPosixTask();
 
-		if (i < 60000) {
+		if (i < 6000) {
 			i++;
-			printf("%d\n", i);
 			pRaspiLLHandle->calibrate_magnetometer();
 		}
 		else {
