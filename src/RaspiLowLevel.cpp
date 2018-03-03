@@ -185,17 +185,17 @@ namespace RASPI {
 	void RaspiLowLevel::calibrate_magnetometer() {
 		this->fetch_data_from_stm32(&this->ins_data, false);
 		for (int i = 0; i < 3; i++) {
-			if (this->ins_data.at(i + 6) > this->mag_max_value(i))
+			if (this->ins_data.at(i + 6) > this->mag_max_value.at(i))
 			{
-				this->mag_max_value(i) = this->ins_data.at(i + 6);
+				this->mag_max_value.at(i) = this->ins_data.at(i + 6);
 			}
 
-			if (this->ins_data.at(i + 6) < this->mag_maxmin_value(i))
+			if (this->ins_data.at(i + 6) < this->mag_min_value.at(i))
 			{
-				this->mag_min_value(i) = this->ins_data.at(i + 6);
+				this->mag_min_value.at(i) = this->ins_data.at(i + 6);
 			}
 
-			this->ins_bias(i + 6) = ( this->mag_max_value(i) + this->mag_min_value(i) )/2.0f;
+			this->ins_bias(i + 6) = ( this->mag_max_value.at(i) + this->mag_min_value.at(i) )/2.0f;
 		}
 	}
 
