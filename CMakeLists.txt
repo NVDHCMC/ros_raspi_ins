@@ -240,4 +240,5 @@ add_executable (
 target_link_libraries (
   calibration
   ${catkin_LIBRARIES}
+  /usr/local/lib/libbcm2835.a
 )
