@@ -6,8 +6,6 @@
 #define PERIOD_MICROSECS 10000 //10 millisecs
 
 boost::shared_ptr<RASPI::RaspiLowLevel> pRaspiLLHandle;
-boost::shared_ptr<Mahony> pMahonyFilter;
-os
 
 void * calibration_task( void * dummy )
 {
