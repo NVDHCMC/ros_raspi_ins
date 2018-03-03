@@ -22,7 +22,7 @@ void * calibration_task( void * dummy )
 		else {
 			int ite = 0;
 			// Fetch data with calibration
-			pRaspiLLHandle->fetch_data_from_stm32(pRaspiLLHandle->ins_data, true);
+			pRaspiLLHandle->fetch_data_from_stm32(&pRaspiLLHandle->ins_data, true);
 			for (ite = 0; ite < 6; ite++)
 				printf("%f ", pRaspiLLHandle->ins_bias.at(ite));
 			printf("\n");
