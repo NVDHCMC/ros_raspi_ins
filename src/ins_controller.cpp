@@ -30,13 +30,13 @@ void * MySimpleTask( void * dummy )
 		}
 		else {
 			pRaspiLLHandle->fetch_data_from_stm32(&pRaspiLLHandle->ins_data, true);
-			pMahonyFilter->updateIMU(pRaspiLLHandle->ins_data[3], pRaspiLLHandle->ins_data[4], pRaspiLLHandle->ins_data[5], 
-				pRaspiLLHandle->ins_data[0], pRaspiLLHandle->ins_data[1], pRaspiLLHandle->ins_data[2]);	 
-				//pRaspiLLHandle->ins_data[7], pRaspiLLHandle->ins_data[8], pRaspiLLHandle->ins_data[9]);
+			pMahonyFilter->updateIMU(pRaspiLLHandle->ins_data.at(3), pRaspiLLHandle->ins_data.at(4), pRaspiLLHandle->ins_data.at(5), 
+				pRaspiLLHandle->ins_data.at(0), pRaspiLLHandle->ins_data.at(1), pRaspiLLHandle->ins_data.at(2));	 
+				//pRaspiLLHandle->ins_data.at(7), pRaspiLLHandle->ins_data.at(8), pRaspiLLHandle->ins_data.at(9));
 			RPY.at(0) = pMahonyFilter->getRoll();
 			RPY.at(1) = pMahonyFilter->getPitch();
 			RPY.at(2) = pMahonyFilter->getYaw();
-			printf("%f %f %f \n", RPY.at(0), RPY.at(1), RPY.at(2));
+			printf("%f %f %f %f \n", RPY.at(0), RPY.at(1), RPY.at(2), pRaspiLLHandle->ins_data.at(6)*pRaspiLLHandle->ins_data.at(6) + pRaspiLLHandle->ins_data.at(7)*pRaspiLLHandle->ins_data.at(7) + pRaspiLLHandle->ins_data.at(8)*pRaspiLLHandle->ins_data.at(8));
 			//pRosComp->send_data();
 			ResultIncValue++;
 		}

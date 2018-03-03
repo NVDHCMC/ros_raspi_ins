@@ -180,6 +180,9 @@ namespace RASPI {
 				this->ins_bias.at(i) -= 1.0f;
 			}
 		}
+		this->ins_bias.at(6) = 29.7;
+		this->ins_bias.at(7) = 59.4;
+		this->ins_bias.at(8) = -79.2;
 	}
 
 	void RaspiLowLevel::calibrate_magnetometer() {
