@@ -206,18 +206,38 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${XENOMAI_LDFLAGS} -lpthre
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${XENOMAI_LDFLAGS} -lpthread -lbcm2835 -lboost_filesystem")
 
 add_executable(
-    ins_controller 
-    src/fosi.cpp
-    src/RosComponent.cpp
-    src/RaspiLowLevel.cpp
-    src/ins_controller.cpp
-    src/MahonyAHRS.cpp
-)
-target_link_libraries(
-    ins_controller
-    ${catkin_LIBRARIES}
-    /usr/local/lib/libbcm2835.a
+  ins_controller 
+  src/fosi.cpp
+  src/RosComponent.cpp
+  src/RaspiLowLevel.cpp
+  src/ins_controller.cpp
+  src/MahonyAHRS.cpp
 )
 
-add_executable(listener src/listener.cpp)
-target_link_libraries(listener ${catkin_LIBRARIES})
+target_link_libraries(
+  ins_controller
+  ${catkin_LIBRARIES}
+  /usr/local/lib/libbcm2835.a
+)
+
+add_executable(
+  listener 
+  src/listener.cpp
+)
+
+target_link_libraries(
+  listener 
+  ${catkin_LIBRARIES}
+)
+
+add_executable (
+  calibration
+  src/calibration.cpp
+  src/RaspiLowLevel.cpp
+  src/fosi.cpp
+)
+
+target_link_libraries (
+  calibration
+  ${catkin_LIBRARIES}
+)

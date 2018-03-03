@@ -67,6 +67,7 @@ int main(int argc, char ** argv) {
 
 	// Create a new Xenomai RT POSIX thread
 	sleep(0.5);
+	char opt;
 	if (pRaspiLLHandle->pair_stm32()) {
 		int err;
 		std::cin.get();
