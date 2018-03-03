@@ -195,7 +195,7 @@ namespace RASPI {
 				this->mag_min_value.at(i) = this->ins_data.at(i + 6);
 			}
 
-			this->ins_bias(i + 6) = ( this->mag_max_value.at(i) + this->mag_min_value.at(i) )/2.0f;
+			this->ins_bias.at(i + 6) = ( this->mag_max_value.at(i) + this->mag_min_value.at(i) )/2.0f;
 		}
 	}
 
