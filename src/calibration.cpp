@@ -103,7 +103,7 @@ int main(int argc, char ** argv) {
 			
 			accel_calibration_file.open("/home/pi/accel_calib.txt");
 			gyro_calibration_file.open("/home/pi/accel_calib.txt");
-			log_file.open("/home/pi/imu_log.txt", ios::out | ios::app);
+			log_file.open("/home/pi/imu_log.txt", std::ios::out | std::ios::app);
 
 			// Writing accelerometer calibration data to file.
 			accel_calibration_file << pRaspiLLHandle->ins_bias.at(0) << " " << pRaspiLLHandle->ins_bias.at(1) << " " << pRaspiLLHandle->ins_bias.at(2) << "\n";
@@ -144,7 +144,7 @@ int main(int argc, char ** argv) {
 			printf("-- [INFO]: Writing calibration data to file.\n");
 			
 			magnetometer_calibration_file.open("/home/pi/magnetometer_calib.txt");
-			log_file.open("/home/pi/imu_log.txt", ios::out | ios::app);
+			log_file.open("/home/pi/imu_log.txt", std::ios::out | std::ios::app);
 
 			// Writing magnetometer calibration data to file
 			magnetometer_calibration_file << pRaspiLLHandle->ins_bias.at(6) << " " << pRaspiLLHandle->ins_bias.at(7) << " " << pRaspiLLHandle->ins_bias.at(8) << "\n";
