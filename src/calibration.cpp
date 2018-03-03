@@ -2,6 +2,7 @@
 #include "RaspiLowLevel.hpp"
 #include <sstream>
 #include <fstream>
+#include <iostream>
 
 #define PERIOD_MICROSECS 10000 //10 millisecs
 
