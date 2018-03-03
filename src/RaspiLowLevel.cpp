@@ -1,7 +1,8 @@
 #include "RaspiLowLevel.hpp"
 
 namespace RASPI {
-	RaspiLowLevel::RaspiLowLevel() : buffer(255, 0), ins_data(10, 0), ins_bias(9, 0), acc_err(9, 0),
+	RaspiLowLevel::RaspiLowLevel() : buffer(255, 0), 
+		ins_data(10, 0), ins_bias(9, 0), acc_err(9, 0), mag_max_value(3, 0), mag_min_value(3, 0),
 		stm32_init_string{0xff, 'H', 'e', 'l', 'l', 'o', ',', 'S', 'T', 'M', 0x00},
 		stm32_receive_string{0xff, 'h', 'e', 'l', 'l', 'o', ',', 'R', 'P', 'i', 0x00},
 		stm32_pair_string{0xff, 'S', 'T', 'M', '3', '2', 'F', '4', '0', '7', 0x00},
@@ -160,7 +161,7 @@ namespace RASPI {
 		data->at(8) = temp.at(9);
 
 		if (calibrated) {
-			for (int i = 0; i < 6; i++) {
+			for (int i = 0; i < 9; i++) {
 				data->at(i) -= this->ins_bias.at(i);
 			}
 		}
@@ -172,12 +173,29 @@ namespace RASPI {
 		this->fetch_data_from_stm32(&this->ins_data, false);
 		this->sample_count++;
 
-		for(int i = 0; i < 9; i++) {
+		for(int i = 0; i < 6; i++) {
 			this->acc_err.at(i) +=this->ins_data.at(i);
 			this->ins_bias.at(i) = this->acc_err.at(i)/( (float) this->sample_count );
 			if (i == 2) {
-				this->ins_bias.at(i) += 1.0f;
+				this->ins_bias.at(i) -= 1.0f;
 			}
+		}
+	}
+
+	void RaspiLowLevel::calibrate_magnetometer() {
+		this->fetch_data_from_stm32(&this->ins_data, false);
+		for (int i = 0; i < 3; i++) {
+			if (this->ins_data.at(i + 6) > this->mag_max_value(i))
+			{
+				this->mag_max_value(i) = this->ins_data.at(i + 6);
+			}
+
+			if (this->ins_data.at(i + 6) < this->mag_maxmin_value(i))
+			{
+				this->mag_min_value(i) = this->ins_data.at(i + 6);
+			}
+
+			this->ins_bias(i + 6) = ( this->mag_max_value(i) + this->mag_min_value(i) )/2.0f;
 		}
 	}
 
