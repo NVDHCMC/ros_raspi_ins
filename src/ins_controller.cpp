@@ -43,7 +43,7 @@ void * MySimpleTask( void * dummy )
 			printf("%f %f %f %f \n", RPY.at(0), RPY.at(1), RPY.at(2), pRaspiLLHandle->ins_data.at(6)*pRaspiLLHandle->ins_data.at(6) + pRaspiLLHandle->ins_data.at(7)*pRaspiLLHandle->ins_data.at(7) + pRaspiLLHandle->ins_data.at(8)*pRaspiLLHandle->ins_data.at(8));
 			//pRosComp->send_data();
 			for (i = 0; i < 9; i++) {
-				data_logging.get()[ResultIncValue] = pRaspiLLHandle->ins_data.at(i);
+				pFloatData.get()[ResultIncValue] = pRaspiLLHandle->ins_data.at(i);
 				ResultIncValue++;
 			}
 			if (ResultIncValue == 89999)
@@ -97,7 +97,7 @@ int main(int argc, char ** argv) {
 			int count = 0;
 			for (int i = 0; i < 10000; i++) {
 				for (int j = 0; j < 9; i++) {
-					log_file << data_logging[count] << " ";
+					log_file << pFloatData.get()[count] << " ";
 					count++;
 				}
 				log_file << "\n";
