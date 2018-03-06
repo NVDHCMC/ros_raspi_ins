@@ -14,6 +14,8 @@ typedef boost::shared_ptr<RTOS::RosComponent> pRosComponent;
 boost::shared_ptr<RTOS::RosComponent> pRosComp;
 boost::shared_ptr<RASPI::RaspiLowLevel> pRaspiLLHandle;
 boost::shared_ptr<Mahony> pMahonyFilter;
+float data_logging[90000] = {0.0f};
+bool flags = false;
 
 void * MySimpleTask( void * dummy )
 {
@@ -21,6 +23,7 @@ void * MySimpleTask( void * dummy )
 	std::vector<float> ins_data (10, 0);
 	std::vector<float> RPY (3, 0);
 	bool calibrated = false;
+
 	while( RTOS::ThreadRunning )
 	{
 		RTOS::WaitPeriodicPosixTask( );
@@ -38,7 +41,15 @@ void * MySimpleTask( void * dummy )
 			RPY.at(2) = pMahonyFilter->getYaw();
 			printf("%f %f %f %f \n", RPY.at(0), RPY.at(1), RPY.at(2), pRaspiLLHandle->ins_data.at(6)*pRaspiLLHandle->ins_data.at(6) + pRaspiLLHandle->ins_data.at(7)*pRaspiLLHandle->ins_data.at(7) + pRaspiLLHandle->ins_data.at(8)*pRaspiLLHandle->ins_data.at(8));
 			//pRosComp->send_data();
-			ResultIncValue++;
+			for (i = 0; i < 9; i++) {
+				data_logging[ResultIncValue] = pRaspiLLHandle->ins_data.at(i);
+				ResultIncValue++;
+			}
+			if (ResultIncValue == 89999)
+			{
+				RTOS::ThreadRunning = 0;
+				flags = true;
+			}
 		}
 	}
 	return 0;
@@ -76,13 +87,19 @@ int main(int argc, char ** argv) {
 			printf( "Init task error (%d)!\n",err );
 		}
 		else {
-			printf("Press ESC to stop.\n"); 
-			while (std::cin.get() != 27)
-			{
-				sleep(0.5);
+			while (!flags) {
+				sleep(1);
 			}
-
-			RTOS::ThreadRunning = 0;
+			std::ofstream log_file;
+			log_file.open("/home/pi/data.txt");
+			int count = 0;
+			for (int i = 0; i < 10000; i++) {
+				for (int j = 0; j < 9; i++) {
+					log_file << data_logging[count] << " ";
+					count++;
+				}
+				log_file << "\n";
+			}
 		}
 	}
 	
