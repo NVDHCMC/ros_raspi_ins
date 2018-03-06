@@ -15,7 +15,7 @@ typedef boost::shared_ptr<RTOS::RosComponent> pRosComponent;
 boost::shared_ptr<RTOS::RosComponent> pRosComp;
 boost::shared_ptr<RASPI::RaspiLowLevel> pRaspiLLHandle;
 boost::shared_ptr<Mahony> pMahonyFilter;
-float data_logging[90000] = {0.0f};
+boost::shared_ptr<float[90000]> pFloatData;
 bool flags = false;
 
 void * MySimpleTask( void * dummy )
@@ -43,7 +43,7 @@ void * MySimpleTask( void * dummy )
 			printf("%f %f %f %f \n", RPY.at(0), RPY.at(1), RPY.at(2), pRaspiLLHandle->ins_data.at(6)*pRaspiLLHandle->ins_data.at(6) + pRaspiLLHandle->ins_data.at(7)*pRaspiLLHandle->ins_data.at(7) + pRaspiLLHandle->ins_data.at(8)*pRaspiLLHandle->ins_data.at(8));
 			//pRosComp->send_data();
 			for (i = 0; i < 9; i++) {
-				data_logging[ResultIncValue] = pRaspiLLHandle->ins_data.at(i);
+				data_logging.get()[ResultIncValue] = pRaspiLLHandle->ins_data.at(i);
 				ResultIncValue++;
 			}
 			if (ResultIncValue == 89999)
@@ -71,6 +71,7 @@ int main(int argc, char ** argv) {
 	pRosComp.reset(new RTOS::RosComponent());
 	pRaspiLLHandle.reset(new RASPI::RaspiLowLevel());
 	pMahonyFilter.reset(new Mahony());
+	pFloatData.reset(new float[90000]);
 
 	// Initialize SPI periph and pairing with stm32
 	pRaspiLLHandle->init_spi();
