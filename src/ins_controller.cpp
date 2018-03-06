@@ -6,6 +6,7 @@
 #include "ins_controller/Ins.h"
 #include "MahonyAHRS.h"
 #include <sstream>
+#include <fstream>
 
 uint32_t ResultIncValue = 0;
 #define PERIOD_MICROSECS 10000 //10 millisecs
