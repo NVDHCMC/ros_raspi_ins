@@ -8,7 +8,6 @@
 #include <sstream>
 #include <fstream>
 
-uint32_t ResultIncValue = 0;
 #define PERIOD_MICROSECS 10000 //10 millisecs
 
 typedef boost::shared_ptr<RTOS::RosComponent> pRosComponent;
@@ -24,7 +23,7 @@ void * MySimpleTask( void * dummy )
 	std::vector<float> ins_data (10, 0);
 	std::vector<float> RPY (3, 0);
 	bool calibrated = false;
-
+	uint32_t ResultIncValue = 0;
 	while( RTOS::ThreadRunning )
 	{
 		RTOS::WaitPeriodicPosixTask( );
@@ -42,15 +41,6 @@ void * MySimpleTask( void * dummy )
 			RPY.at(2) = pMahonyFilter->getYaw();
 			printf("%f %f %f %f \n", RPY.at(0), RPY.at(1), RPY.at(2), pRaspiLLHandle->ins_data.at(6)*pRaspiLLHandle->ins_data.at(6) + pRaspiLLHandle->ins_data.at(7)*pRaspiLLHandle->ins_data.at(7) + pRaspiLLHandle->ins_data.at(8)*pRaspiLLHandle->ins_data.at(8));
 			//pRosComp->send_data();
-			for (i = 0; i < 9; i++) {
-				pFloatData.get()[ResultIncValue] = pRaspiLLHandle->ins_data.at(i);
-				ResultIncValue++;
-			}
-			if (ResultIncValue == 89999)
-			{
-				RTOS::ThreadRunning = 0;
-				flags = true;
-			}
 		}
 	}
 	return 0;
@@ -84,13 +74,13 @@ int main(int argc, char ** argv) {
 	if (pRaspiLLHandle->pair_stm32()) {
 		int err;
 		std::cin.get();
-		err = RTOS::CreatePosixTask( "DemoPosix", 1/*Priority*/, 16/*StackSizeInKo*/, PERIOD_MICROSECS/*PeriodMicroSecs*/, MySimpleTask );
+		err = RTOS::CreatePosixTask( "DemoPosix", 1/*Priority*/, 64000/*StackSizeInKo*/, PERIOD_MICROSECS/*PeriodMicroSecs*/, MySimpleTask );
 		if ( err!=0 ) {
 			printf( "Init task error (%d)!\n",err );
 		}
 		else {
 			while (!flags) {
-				sleep(1);
+				//sleep(1);
 			}
 			std::ofstream log_file;
 			log_file.open("/home/pi/data.txt");
