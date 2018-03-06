@@ -41,6 +41,15 @@ void * MySimpleTask( void * dummy )
 			RPY.at(2) = pMahonyFilter->getYaw();
 			printf("%f %f %f %f \n", RPY.at(0), RPY.at(1), RPY.at(2), pRaspiLLHandle->ins_data.at(6)*pRaspiLLHandle->ins_data.at(6) + pRaspiLLHandle->ins_data.at(7)*pRaspiLLHandle->ins_data.at(7) + pRaspiLLHandle->ins_data.at(8)*pRaspiLLHandle->ins_data.at(8));
 			//pRosComp->send_data();
+			for (i = 0; i < 9; i++) {
+				pFloatData.get()[ResultIncValue] = pRaspiLLHandle->ins_data.at(i);
+				ResultIncValue++;
+			}
+			if (ResultIncValue == 89999)
+			{
+				RTOS::ThreadRunning = 0;
+				flags = true;
+			}
 		}
 	}
 	return 0;
@@ -67,6 +76,7 @@ int main(int argc, char ** argv) {
 	pRaspiLLHandle->init_spi();
 
 	pMahonyFilter->begin(100);
+	for(int i = 0; i < 90000; i++) pFloatData.get()[i] = 0.0f;
 
 	// Create a new Xenomai RT POSIX thread
 	sleep(0.5);
