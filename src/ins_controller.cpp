@@ -45,7 +45,7 @@ void * MySimpleTask( void * dummy )
 			printf("%f %f %f %f \n", RPY.at(0), RPY.at(1), RPY.at(2), pRaspiLLHandle->ins_data.at(6)*pRaspiLLHandle->ins_data.at(6) + pRaspiLLHandle->ins_data.at(7)*pRaspiLLHandle->ins_data.at(7) + pRaspiLLHandle->ins_data.at(8)*pRaspiLLHandle->ins_data.at(8));
 			//pRosComp->send_data();
 			for (i = 0; i < 9; i++) {
-				buffer[ResultIncValue] = pRaspiLLHandle->ins_data.at(i);
+				//buffer[ResultIncValue] = pRaspiLLHandle->ins_data.at(i);
 				ResultIncValue++;
 			}
 			
@@ -53,14 +53,14 @@ void * MySimpleTask( void * dummy )
 			{
 				printf("Something\n");
 				ResultIncValue = 0;
-				memcpy((data + pack*90), buffer, 90);
+				//memcpy((data + pack*90), buffer, 90);
 				pack++;
 			}
 
 			if (pack == 999) {
 				printf("Something 2\n");
 				RTOS::ThreadRunning = 0;
-				flags = true;
+				//flags = true;
 			}
 		}
 	}
