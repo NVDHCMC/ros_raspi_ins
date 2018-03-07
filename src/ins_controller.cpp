@@ -46,7 +46,7 @@ void * MySimpleTask( void * dummy )
 				//buffer[ResultIncValue] = pRaspiLLHandle->ins_data.at(i);
 				ResultIncValue++;
 			}
-			
+			printf("%d\n", ResultIncValue);
 			if (ResultIncValue == 89)
 			{
 				printf("Something\n");
