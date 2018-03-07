@@ -14,7 +14,7 @@ typedef boost::shared_ptr<RTOS::RosComponent> pRosComponent;
 boost::shared_ptr<RTOS::RosComponent> pRosComp;
 boost::shared_ptr<RASPI::RaspiLowLevel> pRaspiLLHandle;
 boost::shared_ptr<Mahony> pMahonyFilter;
-boost::shared_ptr<float[90000]> pFloatData;
+float data[90000];
 bool flags = false;
 
 void * MySimpleTask( void * dummy )
@@ -24,6 +24,9 @@ void * MySimpleTask( void * dummy )
 	std::vector<float> RPY (3, 0);
 	bool calibrated = false;
 	uint32_t ResultIncValue = 0;
+	float buffer[90] = {0.0f};
+	bool full = false;
+	uint32_t pack = 0;
 	while( RTOS::ThreadRunning )
 	{
 		RTOS::WaitPeriodicPosixTask( );
@@ -42,11 +45,18 @@ void * MySimpleTask( void * dummy )
 			printf("%f %f %f %f \n", RPY.at(0), RPY.at(1), RPY.at(2), pRaspiLLHandle->ins_data.at(6)*pRaspiLLHandle->ins_data.at(6) + pRaspiLLHandle->ins_data.at(7)*pRaspiLLHandle->ins_data.at(7) + pRaspiLLHandle->ins_data.at(8)*pRaspiLLHandle->ins_data.at(8));
 			//pRosComp->send_data();
 			for (i = 0; i < 9; i++) {
-				pFloatData.get()[ResultIncValue] = pRaspiLLHandle->ins_data.at(i);
+				buffer[ResultIncValue] = pRaspiLLHandle->ins_data.at(i);
 				ResultIncValue++;
 			}
-			if (ResultIncValue == 89999)
+			
+			if (ResultIncValue == 89)
 			{
+				ResultIncValue = 0;
+				memcpy(*(data + pack*90), buffer, 90);
+				pack++;
+			}
+
+			if (pack == 999) {
 				RTOS::ThreadRunning = 0;
 				flags = true;
 			}
@@ -70,13 +80,12 @@ int main(int argc, char ** argv) {
 	pRosComp.reset(new RTOS::RosComponent());
 	pRaspiLLHandle.reset(new RASPI::RaspiLowLevel());
 	pMahonyFilter.reset(new Mahony());
-	pFloatData.reset(new float[90000]);
 
 	// Initialize SPI periph and pairing with stm32
 	pRaspiLLHandle->init_spi();
 
 	pMahonyFilter->begin(100);
-	for(int i = 0; i < 90000; i++) pFloatData.get()[i] = 0.0f;
+	for(int i = 0; i < 90000; i++) data[i] = 0.0f;
 
 	// Create a new Xenomai RT POSIX thread
 	sleep(0.5);
@@ -84,7 +93,7 @@ int main(int argc, char ** argv) {
 	if (pRaspiLLHandle->pair_stm32()) {
 		int err;
 		std::cin.get();
-		err = RTOS::CreatePosixTask( "DemoPosix", 1/*Priority*/, 64000/*StackSizeInKo*/, PERIOD_MICROSECS/*PeriodMicroSecs*/, MySimpleTask );
+		err = RTOS::CreatePosixTask( "DemoPosix", 1/*Priority*/, 32/*StackSizeInKo*/, PERIOD_MICROSECS/*PeriodMicroSecs*/, MySimpleTask );
 		if ( err!=0 ) {
 			printf( "Init task error (%d)!\n",err );
 		}
@@ -92,12 +101,13 @@ int main(int argc, char ** argv) {
 			while (!flags) {
 				//sleep(1);
 			}
+			printf("-- [INFO]: Write data to file\n");
 			std::ofstream log_file;
 			log_file.open("/home/pi/data.txt");
 			int count = 0;
 			for (int i = 0; i < 10000; i++) {
 				for (int j = 0; j < 9; i++) {
-					log_file << pFloatData.get()[count] << " ";
+					log_file << data[count] << " ";
 					count++;
 				}
 				log_file << "\n";
