@@ -20,11 +20,9 @@ bool flags = false;
 void * MySimpleTask( void * dummy )
 {
 	int i = 0;
-	std::vector<float> ins_data (10, 0);
 	std::vector<float> RPY (3, 0);
-	bool calibrated = false;
 	uint32_t ResultIncValue = 0;
-	float buffer[90] = {0.0f};
+	//float buffer[90] = {0.0f};
 	bool full = false;
 	uint32_t pack = 0;
 	while( RTOS::ThreadRunning )
