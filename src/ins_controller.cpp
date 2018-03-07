@@ -51,12 +51,14 @@ void * MySimpleTask( void * dummy )
 			
 			if (ResultIncValue == 89)
 			{
+				printf("Something\n");
 				ResultIncValue = 0;
-				memcpy(*(data + pack*90), buffer, 90);
+				memcpy((data + pack*90), buffer, 90);
 				pack++;
 			}
 
 			if (pack == 999) {
+				printf("Something 2\n");
 				RTOS::ThreadRunning = 0;
 				flags = true;
 			}
