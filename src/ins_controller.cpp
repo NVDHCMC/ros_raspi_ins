@@ -6,7 +6,6 @@
 #include "ins_controller/Ins.h"
 #include "MahonyAHRS.h"
 #include <sstream>
-#include <fstream>
 
 #define PERIOD_MICROSECS 10000 //10 millisecs
 
@@ -14,9 +13,8 @@ typedef boost::shared_ptr<RTOS::RosComponent> pRosComponent;
 boost::shared_ptr<RTOS::RosComponent> pRosComp;
 boost::shared_ptr<RASPI::RaspiLowLevel> pRaspiLLHandle;
 boost::shared_ptr<Mahony> pMahonyFilter;
-float data[90000];
 bool flags = false;
-
+FILE * pFile;
 void * MySimpleTask( void * dummy )
 {
 	int i = 0;
@@ -42,23 +40,12 @@ void * MySimpleTask( void * dummy )
 			RPY.at(2) = pMahonyFilter->getYaw();
 			printf("%f %f %f %f \n", RPY.at(0), RPY.at(1), RPY.at(2), pRaspiLLHandle->ins_data.at(6)*pRaspiLLHandle->ins_data.at(6) + pRaspiLLHandle->ins_data.at(7)*pRaspiLLHandle->ins_data.at(7) + pRaspiLLHandle->ins_data.at(8)*pRaspiLLHandle->ins_data.at(8));
 			//pRosComp->send_data();
-			for (i = 0; i < 9; i++) {
-				//buffer[ResultIncValue] = pRaspiLLHandle->ins_data.at(i);
-				ResultIncValue++;
-			}
-			printf("%d\n", ResultIncValue);
-			if (ResultIncValue == 89)
-			{
-				printf("Something\n");
-				ResultIncValue = 0;
-				//memcpy((data + pack*90), buffer, 90);
-				pack++;
-			}
-
-			if (pack == 999) {
-				printf("Something 2\n");
+			fprintf(pFile, "%f %f %f %f %f %f %f %f %f\n", pRaspiLLHandle->ins_data.at(0), pRaspiLLHandle->ins_data.at(1), pRaspiLLHandle->ins_data.at(2), 
+				pRaspiLLHandle->ins_data.at(3), pRaspiLLHandle->ins_data.at(4), pRaspiLLHandle->ins_data.at(5),
+				pRaspiLLHandle->ins_data.at(7), pRaspiLLHandle->ins_data.at(6), -pRaspiLLHandle->ins_data.at(8));
+			ResultIncValue++;
+			if (ResultIncValue == 10000) {
 				RTOS::ThreadRunning = 0;
-				//flags = true;
 			}
 		}
 	}
@@ -85,7 +72,8 @@ int main(int argc, char ** argv) {
 	pRaspiLLHandle->init_spi();
 
 	pMahonyFilter->begin(100);
-	for(int i = 0; i < 90000; i++) data[i] = 0.0f;
+
+	pFile = fopen("/home/pi/data.txt", "w");
 
 	// Create a new Xenomai RT POSIX thread
 	sleep(0.5);
@@ -101,17 +89,8 @@ int main(int argc, char ** argv) {
 			while (!flags) {
 				//sleep(1);
 			}
-			printf("-- [INFO]: Write data to file\n");
-			std::ofstream log_file;
-			log_file.open("/home/pi/data.txt");
-			int count = 0;
-			for (int i = 0; i < 10000; i++) {
-				for (int j = 0; j < 9; i++) {
-					log_file << data[count] << " ";
-					count++;
-				}
-				log_file << "\n";
-			}
+			printf("-- [INFO]: Done logging\n");
+			fclose(pFile);
 		}
 	}
 	
