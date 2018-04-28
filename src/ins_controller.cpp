@@ -27,6 +27,10 @@ void * MySimpleTask( void * dummy )
 			printf("Not recognized as MPU9255.\n");
 			RTOS::ThreadRunning = 0;
 		}
+		else 
+		{
+			printf("%d\n", ID);
+		}
 	}
 	return 0;
 }
