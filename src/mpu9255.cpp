@@ -6,7 +6,7 @@
 #include <iostream>
 
 namespace SENSOR {
-	mpu9255::mpu9255(): ins_data(255, 0.0), ins_bias(255, 0.0)
+	mpu9255::mpu9255() : ins_data(255, 0.0), ins_bias(255, 0.0)
 	{
 		if (!bcm2835_spi_begin())
 		{

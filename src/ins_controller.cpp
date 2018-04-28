@@ -22,7 +22,7 @@ void * MySimpleTask( void * dummy )
 	{
 		RTOS::WaitPeriodicPosixTask( );
 		ID = pMPU9255->getID();
-		if (ID != SENSOR::I_AM_MPU9255)
+		if (ID != I_AM_MPU9255)
 		{
 			printf("Not recognized as MPU9255.\n");
 			RTOS::ThreadRunning = 0;
