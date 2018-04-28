@@ -1,4 +1,3 @@
-#include "RaspiLowLevel.hpp"
 #include "mpu9255.hpp"
 #include <sstream>
 #include <fstream>
@@ -59,7 +58,8 @@ namespace SENSOR {
 		char data[num_byte + 1] = {0};
 		data[0] = REG_ADDR | READWRITE_CMD;
 		bcm2835_spi_transfern(data, num_byte + 1);
-		memcpy(pData, &data[1], num_byte*sizeof(char));
+		//memcpy(pData, &data[1], num_byte*sizeof(char));
+		*pData = data[1];
 	}
 
 	char mpu9255::get_id()

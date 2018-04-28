@@ -3,9 +3,9 @@
 #include "rtos_util.hpp"
 #include "RosComponent.hpp"
 //#include "RaspiLowLevel.hpp"
-#include "mpu9255.hpp"
 #include "ins_controller/Ins.h"
 #include "MahonyAHRS.h"
+#include "mpu9255.hpp"
 #include <sstream>
 #include <fstream>
 
@@ -56,7 +56,7 @@ int main(int argc, char ** argv) {
 	{
 		return -1;
 	}
-	
+
 	pMahonyFilter->begin(100);
 
 	// Create a new Xenomai RT POSIX thread
