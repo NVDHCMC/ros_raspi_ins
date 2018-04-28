@@ -17,7 +17,7 @@ boost::shared_ptr<SENSOR::mpu9255> pMPU9255;
 
 void * MySimpleTask( void * dummy )
 {
-	uint8_t ID = 0x00;
+	char ID = 0x00;
 	while( RTOS::ThreadRunning )
 	{
 		RTOS::WaitPeriodicPosixTask( );

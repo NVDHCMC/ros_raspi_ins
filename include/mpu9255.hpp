@@ -47,23 +47,23 @@
 /**************************** END REGISTER MAPPING  ***************************/
 /******************************************************************************/
 /* Read/Write command */ // Not checked
-#define READWRITE_CMD                           ((uint8_t)0x80)
+#define READWRITE_CMD                           ((char)0x80)
 /* Multiple byte read/write command */ // Not checked
-#define MULTIPLEBYTE_CMD                        ((uint8_t)0x40)
+#define MULTIPLEBYTE_CMD                        ((char)0x40)
 /* Dummy Byte Send by the SPI Master device in order to generate the Clock to the Slave device */
 // Not checked
-#define DUMMY_BYTE                              ((uint8_t)0x00)
+#define DUMMY_BYTE                              ((char)0x00)
 
-#define I_AM_MPU9255                 ((uint8_t)0x73) 											// Checked
+#define I_AM_MPU9255                 ((char)0x73) 											// Checked
 
 /** @defgroup Power_Management_selection
   * @{
   */
-#define MPU9255_MODE_RESET_ALL 		 ((uint8_t)0x80)
-#define MPU9255_MODE_SLEEP       	 ((uint8_t)0x40)
-#define MPU9255_MODE_CYCLE           ((uint8_t)0x20)
-#define MPU9255_MODE_STANDBY 		 ((uint8_t)0x10)
-#define MPU9255_MODE_PD_PTAT 		 ((uint8_t)0x08)
+#define MPU9255_MODE_RESET_ALL 		 ((char)0x80)
+#define MPU9255_MODE_SLEEP       	 ((char)0x40)
+#define MPU9255_MODE_CYCLE           ((char)0x20)
+#define MPU9255_MODE_STANDBY 		 ((char)0x10)
+#define MPU9255_MODE_PD_PTAT 		 ((char)0x08)
 /**
   * @}
   */
@@ -71,9 +71,9 @@
 /** @defgroup Clock_source_select 																// Checked
   * @{
   */
-#define MPU9255_CLKSEL_20MHZ_INTERNAL_OSCILLATOR ((uint8_t)0x00)
-#define MPU9255_CLKSEL_AUTO_SELECT 	 ((uint8_t)0x01)
-#define MPU9255_CLKSEL_STOP 		 ((uint8_t)0x07)
+#define MPU9255_CLKSEL_20MHZ_INTERNAL_OSCILLATOR ((char)0x00)
+#define MPU9255_CLKSEL_AUTO_SELECT 	 ((char)0x01)
+#define MPU9255_CLKSEL_STOP 		 ((char)0x07)
 /**
   * @}
   */
@@ -81,12 +81,12 @@
 /** @defgroup Axes_Selection 																	// Checked
   * @{
   */
-#define MPU9255_ACCEL_X_ENABLE      ((uint8_t)0xe0)
-#define MPU9255_ACCEL_Y_ENABLE      ((uint8_t)0xd0)
-#define MPU9255_ACCEL_Z_ENABLE      ((uint8_t)0xc8)
-#define MPU9255_GYRO_X_ENABLE       ((uint8_t)0xc4)
-#define MPU9255_GYRO_Y_ENABLE       ((uint8_t)0xc2)
-#define MPU9255_GYRO_Z_ENABLE 		((uint8_t)0xc1)
+#define MPU9255_ACCEL_X_ENABLE      ((char)0xe0)
+#define MPU9255_ACCEL_Y_ENABLE      ((char)0xd0)
+#define MPU9255_ACCEL_Z_ENABLE      ((char)0xc8)
+#define MPU9255_GYRO_X_ENABLE       ((char)0xc4)
+#define MPU9255_GYRO_Y_ENABLE       ((char)0xc2)
+#define MPU9255_GYRO_Z_ENABLE 		((char)0xc1)
 /**
   * @}
   */
@@ -94,14 +94,14 @@
 /** @defgroup Bandwidth_Selection 																// Checked
   * @{
   */
-#define MPU9255_BANDWIDTH_0         ((uint8_t)0x00)
-#define MPU9255_BANDWIDTH_1         ((uint8_t)0x01)
-#define MPU9255_BANDWIDTH_2         ((uint8_t)0x02)
-#define MPU9255_BANDWIDTH_3         ((uint8_t)0x03)
-#define MPU9255_BANDWIDTH_4         ((uint8_t)0x04)
-#define MPU9255_BANDWIDTH_5         ((uint8_t)0x05)
-#define MPU9255_BANDWIDTH_6         ((uint8_t)0x06)
-#define MPU9255_BANDWIDTH_7         ((uint8_t)0x07)
+#define MPU9255_BANDWIDTH_0         ((char)0x00)
+#define MPU9255_BANDWIDTH_1         ((char)0x01)
+#define MPU9255_BANDWIDTH_2         ((char)0x02)
+#define MPU9255_BANDWIDTH_3         ((char)0x03)
+#define MPU9255_BANDWIDTH_4         ((char)0x04)
+#define MPU9255_BANDWIDTH_5         ((char)0x05)
+#define MPU9255_BANDWIDTH_6         ((char)0x06)
+#define MPU9255_BANDWIDTH_7         ((char)0x07)
 /**
   * @}
   */
@@ -109,10 +109,10 @@
 /** @defgroup Full_Scale_Selection 																// Checked
   * @{
   */
-#define MPU9255_FULLSCALE_250       ((uint8_t)0x00)
-#define MPU9255_FULLSCALE_500       ((uint8_t)0x08)
-#define MPU9255_FULLSCALE_1000      ((uint8_t)0x10)
-#define MPU9255_FULLSCALE_2000 		((uint8_t)0x18)
+#define MPU9255_FULLSCALE_250       ((char)0x00)
+#define MPU9255_FULLSCALE_500       ((char)0x08)
+#define MPU9255_FULLSCALE_1000      ((char)0x10)
+#define MPU9255_FULLSCALE_2000 		((char)0x18)
 /**
   * @}
   */
@@ -120,9 +120,9 @@
 /** @defgroup Gyro_Filter_choice 																// Checked
   * @{
   */
-#define MPU9255_GYRO_FILTER_1 		((uint8_t) 0x03)
-#define MPU9255_GYRO_FILTER_2 		((uint8_t) 0x02)
-#define MPU9255_GYRO_FILTER_3 		((uint8_t) 0x00)
+#define MPU9255_GYRO_FILTER_1 		((char) 0x03)
+#define MPU9255_GYRO_FILTER_2 		((char) 0x02)
+#define MPU9255_GYRO_FILTER_3 		((char) 0x00)
 /**
   * @}
   */
@@ -130,10 +130,10 @@
 /** @defgroup Accelerometer_Full_Scale_Selection 												// Checked
   * @{
   */
-#define MPU9255_FULLSCALE_2G      	((uint8_t)0x00)         /*!< gyroscope sensitivity with 250 dps full scale [DPS/LSB]  */
-#define MPU9255_FULLSCALE_4G 		((uint8_t)0x08)        /*!< gyroscope sensitivity with 500 dps full scale [DPS/LSB]  */
-#define MPU9255_FULLSCALE_8G 		((uint8_t)0x10)        /*!< gyroscope sensitivity with 2000 dps full scale [DPS/LSB] */
-#define MPU9255_FULLSCALE_16G		((uint8_t)0x18)
+#define MPU9255_FULLSCALE_2G      	((char)0x00)         /*!< gyroscope sensitivity with 250 dps full scale [DPS/LSB]  */
+#define MPU9255_FULLSCALE_4G 		((char)0x08)        /*!< gyroscope sensitivity with 500 dps full scale [DPS/LSB]  */
+#define MPU9255_FULLSCALE_8G 		((char)0x10)        /*!< gyroscope sensitivity with 2000 dps full scale [DPS/LSB] */
+#define MPU9255_FULLSCALE_16G		((char)0x18)
 /**
   * @}
   */
@@ -141,8 +141,8 @@
 /** @defgroup Accel_Filter_choice 																// Checked
   * @{
   */
-#define MPU9255_ACCEL_FILTER_0 		((uint8_t) 0x80)
-#define MPU9255_ACCEL_FILTER_1 		((uint8_t) 0x00)
+#define MPU9255_ACCEL_FILTER_0 		((char) 0x80)
+#define MPU9255_ACCEL_FILTER_1 		((char) 0x00)
 
 namespace SENSOR {
 	class mpu9255
@@ -150,9 +150,9 @@ namespace SENSOR {
 	public:
 		mpu9255();
 		~mpu9255();
-		bool write_reg(uint8_t reg_cmd, uint8_t REG_ADDR, int num_byte);
-		void read_reg(uint8_t REG_ADDR, uint8_t * pData, int num_byte);
-		uint8_t get_id();
+		bool write_reg(char reg_cmd, char REG_ADDR, int num_byte);
+		void read_reg(char REG_ADDR, char * pData, int num_byte);
+		char get_id();
 		//void calibrate();
 		//void calibrate_magnetometer();
 		std::vector<float> ins_data;
