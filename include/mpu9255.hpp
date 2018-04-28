@@ -145,8 +145,6 @@
 #define MPU9255_ACCEL_FILTER_1 		((uint8_t) 0x00)
 
 namespace SENSOR {
-	
-
 	class mpu9255
 	{
 	public:
@@ -169,4 +167,5 @@ namespace SENSOR {
 		std::vector<float> mag_min_value;
 	};
 }
+
 #endif /* MPU9255_HPP */
