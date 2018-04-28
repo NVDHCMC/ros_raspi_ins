@@ -54,16 +54,14 @@ int main(int argc, char ** argv) {
 
 	// Create a new Xenomai RT POSIX thread
 	sleep(0.5);
-	char opt;
-	if (pRaspiLLHandle->pair_stm32()) {
-		int err;
-		std::cin.get();
-		err = RTOS::CreatePosixTask( "DemoPosix", 1/*Priority*/, 64000/*StackSizeInKo*/, PERIOD_MICROSECS/*PeriodMicroSecs*/, MySimpleTask );
-		if ( err!=0 ) {
-			printf( "Init task error (%d)!\n",err );
-		}
-		else {
-		}
+	int err;
+	std::cin.get();
+	err = RTOS::CreatePosixTask( "DemoPosix", 1/*Priority*/, 64000/*StackSizeInKo*/, PERIOD_MICROSECS/*PeriodMicroSecs*/, MySimpleTask );
+	if ( err!=0 ) {
+		printf( "Init task error (%d)!\n",err );
+		return -1;
+	}
+	else {
 	}
 	
 	return 0;

@@ -161,5 +161,5 @@ namespace SENSOR {
 		std::vector<float> mag_max_value;
 		std::vector<float> mag_min_value;
 	};
-
+}
 #endif /* MPU9255_HPP */
