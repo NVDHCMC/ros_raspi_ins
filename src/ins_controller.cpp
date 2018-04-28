@@ -29,7 +29,7 @@ void * MySimpleTask( void * dummy )
 		}
 		else 
 		{
-			printf("%d\n", ID);
+			printf("%d\n", (uint8_t) ID);
 		}
 	}
 	return 0;
@@ -52,7 +52,8 @@ int main(int argc, char ** argv) {
 	pMPU9255.reset(new SENSOR::mpu9255());
 
 	// Initialize SPI periph and pairing with stm32
-	if (!pMPU9255->init())
+	bool ret = pMPU9255->init();
+	if (!ret)
 	{
 		return -1;
 	}

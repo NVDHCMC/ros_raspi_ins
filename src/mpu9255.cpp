@@ -6,6 +6,9 @@
 namespace SENSOR {
 	mpu9255::mpu9255() : ins_data(255, 0.0), ins_bias(255, 0.0)
 	{
+		if (!bcm2835_init()) {
+			std::cout << "-- [ERROR]: Could not initialize raspberry pi low level hardware." << std::endl;
+		}
 	}
 
 	mpu9255::~mpu9255() {}
@@ -58,8 +61,7 @@ namespace SENSOR {
 		char data[num_byte + 1] = {0};
 		data[0] = REG_ADDR | READWRITE_CMD;
 		bcm2835_spi_transfern(data, num_byte + 1);
-		//memcpy(pData, &data[1], num_byte*sizeof(char));
-		*pData = data[1];
+		memcpy(pData, &data[1], num_byte*sizeof(char));
 	}
 
 	char mpu9255::get_id()

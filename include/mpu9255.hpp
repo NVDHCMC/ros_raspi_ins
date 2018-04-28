@@ -2,6 +2,7 @@
 #ifndef MPU9255_HPP
 #define MPU9255_HPP
 
+#include "ros/ros.h"
 #include <bcm2835.h>
 #include <stdint.h>
 #include <iostream>
