@@ -14,7 +14,7 @@ namespace SENSOR {
 	bool mpu9255::init()
 	{
 		bool rv;
-
+		bcm2835_spi_end();
 		if (!bcm2835_spi_begin())
 		{
 			this->spi_init = false;
@@ -59,7 +59,7 @@ namespace SENSOR {
 		char data[num_byte + 1] = {0};
 		data[0] = REG_ADDR | READWRITE_CMD;
 		bcm2835_spi_transfern(data, num_byte + 1);
-		memcpy(pData, &data[1], num_byte);
+		memcpy(pData, &data[1], num_byte*sizeof(char));
 	}
 
 	char mpu9255::get_id()
