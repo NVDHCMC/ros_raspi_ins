@@ -11,11 +11,9 @@
 
 #define PERIOD_MICROSECS 10000 //10 millisecs
 
-typedef boost::shared_ptr<RTOS::RosComponent> pRosComponent;
 boost::shared_ptr<RTOS::RosComponent> pRosComp;
 boost::shared_ptr<Mahony> pMahonyFilter;
 boost::shared_ptr<SENSOR::mpu9255> pMPU9255;
-bool flags = false;
 
 void * MySimpleTask( void * dummy )
 {
@@ -47,7 +45,7 @@ int main(int argc, char ** argv) {
 	// Construct and init a new RosComponent class shared pointer
 	pRosComp.reset(new RTOS::RosComponent());
 	pMahonyFilter.reset(new Mahony());
-	pMPU9255.reset(new mpu9255());
+	pMPU9255.reset(new SENSOR::mpu9255());
 
 	// Initialize SPI periph and pairing with stm32
 	pMahonyFilter->begin(100);
