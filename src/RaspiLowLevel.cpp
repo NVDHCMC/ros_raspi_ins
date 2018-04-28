@@ -25,6 +25,7 @@ namespace RASPI {
 
 	bool RaspiLowLevel::init_spi() {
 		bool rv = true;
+		bcm2835_spi_end();
 		if (!bcm2835_spi_begin())
 		{
 			this->spi_init = false;

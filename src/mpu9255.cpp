@@ -1,4 +1,3 @@
-#include <stdint>
 #include "RaspiLowLevel.hpp"
 #include "mpu9255.hpp"
 #include <sstream>
