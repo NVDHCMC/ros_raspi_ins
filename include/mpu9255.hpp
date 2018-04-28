@@ -152,6 +152,7 @@ namespace SENSOR {
 		~mpu9255();
 		bool write_reg(char reg_cmd, char REG_ADDR, int num_byte);
 		void read_reg(char REG_ADDR, char * pData, int num_byte);
+		void init();
 		char get_id();
 		//void calibrate();
 		//void calibrate_magnetometer();

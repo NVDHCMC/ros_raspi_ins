@@ -7,6 +7,12 @@
 namespace SENSOR {
 	mpu9255::mpu9255() : ins_data(255, 0.0), ins_bias(255, 0.0)
 	{
+	}
+
+	mpu9255::~mpu9255() {}
+
+	void mpu9255::init()
+	{
 		if (!bcm2835_spi_begin())
 		{
 			this->spi_init = false;
@@ -26,9 +32,7 @@ namespace SENSOR {
     		bcm2835_spi_setChipSelectPolarity(BCM2835_SPI_CS0, LOW);
 		}
 	}
-
-	mpu9255::~mpu9255() {}
-
+	
 	bool mpu9255::write_reg(char reg_cmd, char REG_ADDR, int num_byte)
 	{
 		bool rv = true;

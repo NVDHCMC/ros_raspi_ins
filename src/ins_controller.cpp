@@ -52,6 +52,7 @@ int main(int argc, char ** argv) {
 	pMPU9255.reset(new SENSOR::mpu9255());
 
 	// Initialize SPI periph and pairing with stm32
+	pMPU9255->init();
 	pMahonyFilter->begin(100);
 
 	// Create a new Xenomai RT POSIX thread
