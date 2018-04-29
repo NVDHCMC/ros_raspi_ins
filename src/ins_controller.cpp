@@ -28,8 +28,8 @@ void * MySimpleTask( void * dummy )
 		RPY.at(0) = pMahonyFilter->getRoll();
 		RPY.at(1) = pMahonyFilter->getPitch();
 		RPY.at(2) = pMahonyFilter->getYaw();
-		printf("%f %f %f %f \n", RPY.at(0), RPY.at(1), RPY.at(2), pRaspiLLHandle->ins_data.at(6)*pRaspiLLHandle->ins_data.at(6) + pRaspiLLHandle->ins_data.at(7)*pRaspiLLHandle->ins_data.at(7) + pRaspiLLHandle->ins_data.at(8)*pRaspiLLHandle->ins_data.at(8));
-		
+		printf("%f %f %f %f \n", RPY.at(0), RPY.at(1), RPY.at(2), pMPU9255->ins_data.at(6)*pMPU9255->ins_data.at(6) + pMPU9255->ins_data.at(7)*pMPU9255->ins_data.at(7) + pMPU9255->ins_data.at(8)*pMPU9255->ins_data.at(8));
+
 	}
 	return 0;
 }
