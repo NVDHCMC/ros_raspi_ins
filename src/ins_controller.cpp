@@ -18,9 +18,17 @@ boost::shared_ptr<SENSOR::mpu9255> pMPU9255;
 void * MySimpleTask( void * dummy )
 {
 	char ID = 0x00;
+	std::vector<float> RPY (3, 0);
 	while( RTOS::ThreadRunning )
 	{
-		RTOS::WaitPeriodicPosixTask( );
+		RTOS::WaitPeriodicPosixTask();
+		pMahonyFilter->update(pMPU9255->ins_data.at(3), pMPU9255->ins_data.at(4), pMPU9255->ins_data.at(5), 
+							  pMPU9255->ins_data.at(0), pMPU9255->ins_data.at(1), pMPU9255->ins_data.at(2),	 
+							  pMPU9255->ins_data.at(7), pMPU9255->ins_data.at(6), -pMPU9255->ins_data.at(8));
+		RPY.at(0) = pMahonyFilter->getRoll();
+		RPY.at(1) = pMahonyFilter->getPitch();
+		RPY.at(2) = pMahonyFilter->getYaw();
+		printf("%f %f %f %f \n", RPY.at(0), RPY.at(1), RPY.at(2), pRaspiLLHandle->ins_data.at(6)*pRaspiLLHandle->ins_data.at(6) + pRaspiLLHandle->ins_data.at(7)*pRaspiLLHandle->ins_data.at(7) + pRaspiLLHandle->ins_data.at(8)*pRaspiLLHandle->ins_data.at(8));
 		
 	}
 	return 0;

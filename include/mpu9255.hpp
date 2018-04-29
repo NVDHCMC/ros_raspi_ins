@@ -155,6 +155,7 @@ namespace SENSOR {
 		void read_reg(char REG_ADDR, char * pData, int num_byte);
 		bool init();
 		char get_id();
+		void get_data();
 		//void calibrate();
 		//void calibrate_magnetometer();
 		std::vector<float> ins_data;
@@ -164,6 +165,7 @@ namespace SENSOR {
 
 		std::vector<float> acc_err;
 		std::vector<uint16_t> buffer;
+		std::vector<uint8_t> raw;
 		std::vector<float> mag_max_value;
 		std::vector<float> mag_min_value;
 		char 			PowerMnt1;
