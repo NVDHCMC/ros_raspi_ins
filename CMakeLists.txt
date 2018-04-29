@@ -214,6 +214,7 @@ add_executable(
   src/MahonyAHRS.cpp
   src/MadgwickAHRS.cpp
   src/mpu9255.cpp
+  src/controller.cpp
 )
 
 target_link_libraries(

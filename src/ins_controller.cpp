@@ -6,6 +6,7 @@
 #include "ins_controller/Ins.h"
 #include "MadgwickAHRS.h"
 #include "mpu9255.hpp"
+#include "controller.hpp"
 #include <sstream>
 #include <fstream>
 
@@ -15,6 +16,7 @@ boost::shared_ptr<RTOS::RosComponent> pRosComp;
 //boost::shared_ptr<Mahony> pMahonyFilter;
 boost::shared_ptr<Madgwick> pMahonyFilter;
 boost::shared_ptr<SENSOR::mpu9255> pMPU9255;
+boost::shared_ptr<RASPI::controller> pCTRL;
 
 void * MySimpleTask( void * dummy )
 {
@@ -51,12 +53,13 @@ int main(int argc, char ** argv) {
 	pRosComp.reset(new RTOS::RosComponent());
 	pMahonyFilter.reset(new Madgwick());
 	pMPU9255.reset(new SENSOR::mpu9255());
+	pCTRL.reset(new RASPI::controller());
 
 	// Initialize SPI periph and pairing with stm32
 	bool ret = pMPU9255->init();
 	if (!ret)
 	{
-		printf("Failed to initialize MPU9255,\n");
+		printf("-- [INFO] Failed to initialize MPU9255,\n");
 		return -1;
 	}
 
@@ -67,9 +70,22 @@ int main(int argc, char ** argv) {
 	ID = pMPU9255->get_id();
 	if (ID != I_AM_MPU9255)
 	{
-		printf("Not recognized as MPU9255.\n");
+		printf("-- [INFO] Not recognized as MPU9255.\n");
 		return -1;
 	}
+
+	// Test i2c
+	if (!pCTRL->i2c_init())
+	{
+		printf("-- [INFO] Could not initialize I2C.\n");
+		return -1;
+	}
+	pCTRL->test_receive();
+	for (int i = 0; i < 32; i++)
+	{
+		printf("%s", pCTRL->receive[i]);
+	}
+	printf("%n");
 
 	int err;
 	printf("-- [INFO] Press any key to start\n");
