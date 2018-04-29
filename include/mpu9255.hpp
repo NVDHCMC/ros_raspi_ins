@@ -150,6 +150,7 @@ namespace SENSOR {
 	public:
 		mpu9255();
 		~mpu9255();
+		void write_cmd(char reg_cmd, char REG_ADDR, int num_byte);
 		bool write_reg(char reg_cmd, char REG_ADDR, int num_byte);
 		void read_reg(char REG_ADDR, char * pData, int num_byte);
 		bool init();

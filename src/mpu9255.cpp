@@ -37,7 +37,7 @@ namespace SENSOR {
     		// Set CS pin active state
     		bcm2835_spi_setChipSelectPolarity(BCM2835_SPI_CS0, LOW);
 		}
-		
+
 		this->Axis = MPU9255_GYRO_X_ENABLE | MPU9255_GYRO_Y_ENABLE | MPU9255_GYRO_Z_ENABLE | \
 			MPU9255_ACCEL_X_ENABLE | MPU9255_ACCEL_Y_ENABLE | MPU9255_ACCEL_Z_ENABLE;
 		this->GyroConfig = MPU9255_FULLSCALE_250 | MPU9255_GYRO_FILTER_3;
@@ -75,17 +75,17 @@ namespace SENSOR {
 		reg_cmd 		= this->IntPinConfig;
 		// Reset all sensors' digital signal path
 		reg_cmd 		= 0x07;
-		mpu9255_write(reg_cmd, MPU9255_SIGNAL_PATH_RST_ADDR, 1);
+		this->write_cmd(reg_cmd, MPU9255_SIGNAL_PATH_RST_ADDR, 1);
 
 		// Reset all sensors' register and signal path
 		reg_cmd 		= 0x01;
-		mpu9255_write(reg_cmd, MPU9255_USER_CTRL_ADDR, 1);
+		this->write_cmd(reg_cmd, MPU9255_USER_CTRL_ADDR, 1);
 
 		if (this->MagnetoConfig != 0x00)
 		{
 			// Reset I2C slave module
 			reg_cmd 		= 0x10;
-			mpu9255_write(reg_cmd, MPU9255_USER_CTRL_ADDR, 1);
+			this->write_cmd(reg_cmd, MPU9255_USER_CTRL_ADDR, 1);
 
 			// Enable I2C master
 			reg_cmd 	= 0x20;
@@ -108,7 +108,7 @@ namespace SENSOR {
 			if (this->write_reg(0x81, (char) 39, 1) == false) rv = false;
 
 			// Read 1 byte retrieved from AK8963
-			mpu9255_read(0x49, &reg_cmd, 1);
+			this->read_reg(0x49, &reg_cmd, 1);
 			if (reg_cmd != 0x48) rv = false;
 
 			// Set AK8963 address to write mode
@@ -124,8 +124,14 @@ namespace SENSOR {
 			if (this->write_reg((0x0c | READWRITE_CMD), (char) 37, 1) == false) rv = false;
 			if (this->write_reg(0x03, (char) 38, 1) == false) rv = false;
 			if (this->write_reg(0x87, (char) 39, 1) == false) rv = false;
-		}s
+		}
 		return rv;
+	}
+
+	void mpu9255::write_cmd(char reg_cmd, char REG_ADDR, int num_byte)
+	{
+		char data[2] = {(REG_ADDR), reg_cmd};
+		bcm2835_spi_transfern(data, 2);
 	}
 
 	bool mpu9255::write_reg(char reg_cmd, char REG_ADDR, int num_byte)

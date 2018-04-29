@@ -53,15 +53,13 @@ int main(int argc, char ** argv) {
 	pMahonyFilter->begin(100);
 
 	// Create a new Xenomai RT POSIX thread
+	char ID;
 	ID = pMPU9255->get_id();
 	if (ID != I_AM_MPU9255)
 	{
 		printf("Not recognized as MPU9255.\n");
 		return -1;
 	}
-
-
-
 
 	sleep(0.5);
 	int err;
