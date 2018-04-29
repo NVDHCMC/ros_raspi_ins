@@ -165,7 +165,7 @@ namespace SENSOR {
 
 		std::vector<float> acc_err;
 		std::vector<uint16_t> buffer;
-		std::vector<uint8_t> raw;
+		uint8_t raw[21];
 		std::vector<float> mag_max_value;
 		std::vector<float> mag_min_value;
 		char 			PowerMnt1;

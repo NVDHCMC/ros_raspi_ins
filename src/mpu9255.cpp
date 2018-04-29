@@ -4,14 +4,17 @@
 #include <iostream>
 
 namespace SENSOR {
-	mpu9255::mpu9255() : ins_data(20, 0.0), ins_bias(20, 0.0), buffer(20, 0), raw(40, 0)
+	mpu9255::mpu9255() : ins_data(20, 0.0), ins_bias(20, 0.0), buffer(20, 0)
 	{
 		if (!bcm2835_init()) {
 			std::cout << "-- [ERROR]: Could not initialize raspberry pi low level hardware." << std::endl;
 		}
-		this->ins_bias.at(6) = 29.7;
-		this->ins_bias.at(7) = 59.4;
-		this->ins_bias.at(8) = -79.2;
+		this->ins_bias.at(3) = -0.61897;
+		this->ins_bias.at(4) =  0.313488;
+		this->ins_bias.at(5) =  0.317511;
+		this->ins_bias.at(6) = 18.9543;
+		this->ins_bias.at(7) = 58.757;
+		this->ins_bias.at(8) = -72.6253;
 	}
 
 	mpu9255::~mpu9255() {}
@@ -120,14 +123,15 @@ namespace SENSOR {
 			if (this->write_reg(0x0b, (char) 38, 1) == false) rv = false;
 			if (this->write_reg(0x01, (char) 99, 1) == false) rv = false;
 			if (this->write_reg(0x81, (char) 39, 1) == false) rv = false;
-
+			sleep(1);
 			if (this->write_reg(0x0a, (char) 38, 1) == false) rv = false;
 			if (this->write_reg(this->MagnetoConfig, (char) 99, 1) == false) rv = false;
 			if (this->write_reg(0x81, (char) 39, 1) == false) rv = false;
-
+			sleep(1);
 			if (this->write_reg((0x0c | READWRITE_CMD), (char) 37, 1) == false) rv = false;
 			if (this->write_reg(0x03, (char) 38, 1) == false) rv = false;
 			if (this->write_reg(0x87, (char) 39, 1) == false) rv = false;
+			sleep(1);
 		}
 		return rv;
 	}
@@ -136,6 +140,7 @@ namespace SENSOR {
 	{
 		char data[2] = {(REG_ADDR), reg_cmd};
 		bcm2835_spi_transfern(data, 2);
+		sleep(0.1);
 	}
 
 	bool mpu9255::write_reg(char reg_cmd, char REG_ADDR, int num_byte)
@@ -149,10 +154,11 @@ namespace SENSOR {
 		char response[2] = {(REG_ADDR | READWRITE_CMD), 0x00};
 		bcm2835_spi_transfern(response, 2);
 
-		if (response[1] != reg_cmd) 
+		if (response[1] != reg_cmd)
 		{
 			rv = false;
-		}	
+		}
+		sleep(0.1);
 		return rv;
 	}
 
@@ -172,12 +178,12 @@ namespace SENSOR {
 		return ID;
 	}
 
-	void get_data()
+	void mpu9255::get_data()
 	{
-		char temp_str[21];
-		memset(temp_str, 0x00, 21);
-		this->read_reg(MPU9255_ACCEL_OUT_X_H_ADDR, temp_str, 21);
-		memcpy(this->raw, temp_str, 21);
+		char temp_str[22];
+		memset(temp_str, 0x00, 22);
+		this->read_reg(MPU9255_ACCEL_OUT_X_H_ADDR, temp_str, 22);
+		memcpy(this->raw, temp_str, 22);
 		std::vector<float> temp(10, 0);
 
 		uint8_t i = 0;
@@ -189,7 +195,7 @@ namespace SENSOR {
 				temp.at(i) = (float) ((int16_t) ( (( (uint16_t) this->raw[2*i + 1] )*256) + ( (uint16_t) this->raw[2*i]) ));;
 				temp.at(i) = temp.at(i)*0.6f;
 			}
-			
+
 			if (i < 3) {
 				temp.at(i) /= 16384.0f;
 			}
@@ -210,12 +216,12 @@ namespace SENSOR {
 		this->ins_data.at(3) = temp.at(4);
 		this->ins_data.at(4) = temp.at(5);
 		this->ins_data.at(5) = temp.at(6);
-		this->ins_data.at(6) = temp.at(7);
-		this->ins_data.at(7) = temp.at(8);
-		this->ins_data.at(8) = temp.at(9);
+		this->ins_data.at(6) = (temp.at(8)*0.9542f + temp.at(7)*(-0.1852f) - temp.at(9)*0.2348f)/1.176f;
+		this->ins_data.at(7) = (temp.at(8)*(-0.2963f) + temp.at(7)*(-0.4797f) - temp.at(9)*0.8259f)/1.0501f;
+		this->ins_data.at(8) = temp.at(8)*(-0.0403f) + temp.at(7)*(-0.8577f) + temp.at(9)*0.5126f;
 
-		for (int i = 0; i < 9; i++) {
-			this->ins_data.at(i) -= this->ins_bias.at(i);
-		}
+//		for (int i = 0; i < 9; i++) {
+//			this->ins_data.at(i) -= this->ins_bias.at(i);
+//		}
 	}
 }

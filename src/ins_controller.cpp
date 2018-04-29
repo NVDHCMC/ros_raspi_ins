@@ -4,7 +4,7 @@
 #include "RosComponent.hpp"
 //#include "RaspiLowLevel.hpp"
 #include "ins_controller/Ins.h"
-#include "MahonyAHRS.h"
+#include "MadgwickAHRS.h"
 #include "mpu9255.hpp"
 #include <sstream>
 #include <fstream>
@@ -12,7 +12,8 @@
 #define PERIOD_MICROSECS 10000 //10 millisecs
 
 boost::shared_ptr<RTOS::RosComponent> pRosComp;
-boost::shared_ptr<Mahony> pMahonyFilter;
+//boost::shared_ptr<Mahony> pMahonyFilter;
+boost::shared_ptr<Madgwick> pMahonyFilter;
 boost::shared_ptr<SENSOR::mpu9255> pMPU9255;
 
 void * MySimpleTask( void * dummy )
@@ -22,6 +23,8 @@ void * MySimpleTask( void * dummy )
 	while( RTOS::ThreadRunning )
 	{
 		RTOS::WaitPeriodicPosixTask();
+		pMPU9255->get_data();
+//		printf("sdfsdf\n");
 		pMahonyFilter->update(pMPU9255->ins_data.at(3), pMPU9255->ins_data.at(4), pMPU9255->ins_data.at(5), 
 							  pMPU9255->ins_data.at(0), pMPU9255->ins_data.at(1), pMPU9255->ins_data.at(2),	 
 							  pMPU9255->ins_data.at(7), pMPU9255->ins_data.at(6), -pMPU9255->ins_data.at(8));
@@ -29,13 +32,12 @@ void * MySimpleTask( void * dummy )
 		RPY.at(1) = pMahonyFilter->getPitch();
 		RPY.at(2) = pMahonyFilter->getYaw();
 		printf("%f %f %f %f \n", RPY.at(0), RPY.at(1), RPY.at(2), pMPU9255->ins_data.at(6)*pMPU9255->ins_data.at(6) + pMPU9255->ins_data.at(7)*pMPU9255->ins_data.at(7) + pMPU9255->ins_data.at(8)*pMPU9255->ins_data.at(8));
-
 	}
 	return 0;
 }
 
 int main(int argc, char ** argv) {
-	
+
 	printf("Simple periodic thread using Posix.\n");
 #if defined( __XENO__ ) || defined( __COBALT__ )
 	printf("Version compiled for Xenomai 2 or 3.\n");
@@ -46,8 +48,8 @@ int main(int argc, char ** argv) {
 	ros::init(argc, argv, "talker");
 
 	// Construct and init a new RosComponent class shared pointer
-	pRosComp.reset(new RTOS::RosComponent());	
-	pMahonyFilter.reset(new Mahony());
+	pRosComp.reset(new RTOS::RosComponent());
+	pMahonyFilter.reset(new Madgwick());
 	pMPU9255.reset(new SENSOR::mpu9255());
 
 	// Initialize SPI periph and pairing with stm32
@@ -58,7 +60,7 @@ int main(int argc, char ** argv) {
 		return -1;
 	}
 
-	pMahonyFilter->begin(100);
+//	pMahonyFilter->begin(100);
 
 	// Create a new Xenomai RT POSIX thread
 	char ID;
@@ -69,17 +71,24 @@ int main(int argc, char ** argv) {
 		return -1;
 	}
 
-	sleep(0.5);
 	int err;
+	printf("-- [INFO] Press any key to start\n");
 	std::cin.get();
 	err = RTOS::CreatePosixTask( "DemoPosix", 1/*Priority*/, 64000/*StackSizeInKo*/, PERIOD_MICROSECS/*PeriodMicroSecs*/, MySimpleTask );
 	if ( err!=0 ) {
-		printf( "Init task error (%d)!\n",err );
+		printf( "-- [INFO] Init task error (%d)!\n",err );
 		return -1;
 	}
 	else {
+		printf("Press ESC to stop.\n"); 
+		while (std::cin.get() != 27)
+		{
+			sleep(0.5);
+		}
+
+		RTOS::ThreadRunning = 0;
 	}
-	
+
 	return 0;
-	
+
 }

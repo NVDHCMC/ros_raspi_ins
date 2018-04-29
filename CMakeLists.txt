@@ -212,6 +212,7 @@ add_executable(
   src/RaspiLowLevel.cpp
   src/ins_controller.cpp
   src/MahonyAHRS.cpp
+  src/MadgwickAHRS.cpp
   src/mpu9255.cpp
 )
 
