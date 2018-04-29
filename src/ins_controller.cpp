@@ -21,16 +21,7 @@ void * MySimpleTask( void * dummy )
 	while( RTOS::ThreadRunning )
 	{
 		RTOS::WaitPeriodicPosixTask( );
-		ID = pMPU9255->get_id();
-		if (ID != I_AM_MPU9255)
-		{
-			printf("Not recognized as MPU9255.\n");
-			RTOS::ThreadRunning = 0;
-		}
-		else 
-		{
-			printf("%d\n", (uint8_t) ID);
-		}
+		
 	}
 	return 0;
 }
@@ -47,7 +38,7 @@ int main(int argc, char ** argv) {
 	ros::init(argc, argv, "talker");
 
 	// Construct and init a new RosComponent class shared pointer
-	pRosComp.reset(new RTOS::RosComponent());
+	pRosComp.reset(new RTOS::RosComponent());	
 	pMahonyFilter.reset(new Mahony());
 	pMPU9255.reset(new SENSOR::mpu9255());
 
@@ -55,12 +46,23 @@ int main(int argc, char ** argv) {
 	bool ret = pMPU9255->init();
 	if (!ret)
 	{
+		printf("Failed to initialize MPU9255,\n");
 		return -1;
 	}
 
 	pMahonyFilter->begin(100);
 
 	// Create a new Xenomai RT POSIX thread
+	ID = pMPU9255->get_id();
+	if (ID != I_AM_MPU9255)
+	{
+		printf("Not recognized as MPU9255.\n");
+		return -1;
+	}
+
+
+
+
 	sleep(0.5);
 	int err;
 	std::cin.get();

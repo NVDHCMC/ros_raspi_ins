@@ -165,6 +165,15 @@ namespace SENSOR {
 		std::vector<uint16_t> buffer;
 		std::vector<float> mag_max_value;
 		std::vector<float> mag_min_value;
+		char 			PowerMnt1;
+		char 			GyroConfig;
+		char 			Axis;
+		char 			AccelConfig1;
+		char 			AccelConfig2;
+		char 			Config;
+		char			Bandwidth;
+		char 			IntPinConfig;
+		char 			MagnetoConfig;
 	};
 }
 
