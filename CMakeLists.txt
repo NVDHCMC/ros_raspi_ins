@@ -215,6 +215,7 @@ add_executable(
   src/MadgwickAHRS.cpp
   src/mpu9255.cpp
   src/controller.cpp
+  src/ipc_communication.cpp
 )
 
 target_link_libraries(
@@ -226,6 +227,11 @@ target_link_libraries(
 add_executable(
   listener 
   src/listener.cpp
+)
+
+add_executable(
+  ipc_listener
+  src/ipc_listener.cpp
 )
 
 target_link_libraries(

@@ -53,7 +53,7 @@ int main(int argc, char ** argv) {
 	pRosComp.reset(new RTOS::RosComponent());
 	pMahonyFilter.reset(new Madgwick());
 	pMPU9255.reset(new SENSOR::mpu9255());
-	pCTRL.reset(new RASPI::controller());
+	pCTRL.reset(new RASPI::controller(0x0c));
 
 	// Initialize SPI periph and pairing with stm32
 	bool ret = pMPU9255->init();
@@ -75,7 +75,7 @@ int main(int argc, char ** argv) {
 	}
 
 	// Test i2c
-	if (!pCTRL->i2c_init())
+	if (!pCTRL->init_i2c())
 	{
 		printf("-- [INFO] Could not initialize I2C.\n");
 		return -1;
@@ -85,7 +85,7 @@ int main(int argc, char ** argv) {
 	{
 		printf("%s", pCTRL->receive[i]);
 	}
-	printf("%n");
+	printf("/n");
 
 	int err;
 	printf("-- [INFO] Press any key to start\n");
