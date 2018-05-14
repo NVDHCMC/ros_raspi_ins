@@ -17,11 +17,13 @@ boost::shared_ptr<RTOS::RosComponent> pRosComp;
 boost::shared_ptr<Madgwick> pMahonyFilter;
 boost::shared_ptr<SENSOR::mpu9255> pMPU9255;
 boost::shared_ptr<RASPI::controller> pCTRL;
+boost::shared_ptr<RTOS::ipc_com> pIPC;
 
 void * MySimpleTask( void * dummy )
 {
 	char ID = 0x00;
 	std::vector<float> RPY (3, 0);
+	char * temp = "Hello world.";
 	while( RTOS::ThreadRunning )
 	{
 		RTOS::WaitPeriodicPosixTask();
@@ -33,6 +35,7 @@ void * MySimpleTask( void * dummy )
 		RPY.at(0) = pMahonyFilter->getRoll();
 		RPY.at(1) = pMahonyFilter->getPitch();
 		RPY.at(2) = pMahonyFilter->getYaw();
+		pIPC->send(temp, 12);
 		printf("%f %f %f %f \n", RPY.at(0), RPY.at(1), RPY.at(2), pMPU9255->ins_data.at(6)*pMPU9255->ins_data.at(6) + pMPU9255->ins_data.at(7)*pMPU9255->ins_data.at(7) + pMPU9255->ins_data.at(8)*pMPU9255->ins_data.at(8));
 	}
 	return 0;
@@ -54,6 +57,7 @@ int main(int argc, char ** argv) {
 	pMahonyFilter.reset(new Madgwick());
 	pMPU9255.reset(new SENSOR::mpu9255());
 	pCTRL.reset(new RASPI::controller(0x0c));
+	pIPC.reset(new RTOS::ipc_com(0x00, 0x01))
 
 	// Initialize SPI periph and pairing with stm32
 	bool ret = pMPU9255->init();

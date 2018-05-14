@@ -2,6 +2,15 @@
 #ifndef IPC_COMMUNICATION_HPP
 #define IPC_COMMUNICATION_HPP
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <signal.h>
+#include <string.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <rtdm/ipc.h>
+
 namespace RTOS {
 	class ipc_com
 	{
@@ -15,7 +24,8 @@ namespace RTOS {
 		struct sockaddr_ipc client_addr;
 		int client_port;
 		int server_port;
-		int socket;
+		int ipc_socket;
+		size_t stream_size;
 	};
 }
 
