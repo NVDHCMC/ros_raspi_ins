@@ -18,7 +18,7 @@ namespace RTOS {
 		ipc_com(int svport, int clport);
 		~ipc_com();
 		void send(char * msg, int len);
-
+	
 	private:
 		struct sockaddr_ipc server_addr;
 		struct sockaddr_ipc client_addr;

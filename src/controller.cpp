@@ -6,7 +6,7 @@ namespace RASPI {
 		if (!bcm2835_init()) {
 			std::cout << "-- [ERROR]: Could not initialize raspberry pi low level hardware." << std::endl;
 		}
-		memset(this->mess, 0x00, 32);
+		memset(this->receive, 0x00, 32);
 		this->slave_addr = addr;
 	}
 
@@ -40,5 +40,10 @@ namespace RASPI {
 	void controller::test_receive()
 	{
 		bcm2835_i2c_read(this->receive, 32);
+	}
+
+	void controller::test_send(char * mess, uint8_t len)
+	{
+		bcm2835_i2c_write(mess, len);
 	}
 }

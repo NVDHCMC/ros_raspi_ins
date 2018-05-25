@@ -3,6 +3,7 @@
 #include "rtos_util.hpp"
 #include "RosComponent.hpp"
 //#include "RaspiLowLevel.hpp"
+#include "ipc_communication.hpp"
 #include "ins_controller/Ins.h"
 #include "MadgwickAHRS.h"
 #include "mpu9255.hpp"
@@ -24,11 +25,14 @@ void * MySimpleTask( void * dummy )
 	char ID = 0x00;
 	std::vector<float> RPY (3, 0);
 	char * temp = "Hello world.";
+	char data[255];
+	struct timespec ts;
+	ts.tv_sec = 0;
+	ts.tv_nsec = 500000; /* 0.5 ms */
 	while( RTOS::ThreadRunning )
 	{
 		RTOS::WaitPeriodicPosixTask();
 		pMPU9255->get_data();
-//		printf("sdfsdf\n");
 		pMahonyFilter->update(pMPU9255->ins_data.at(3), pMPU9255->ins_data.at(4), pMPU9255->ins_data.at(5), 
 							  pMPU9255->ins_data.at(0), pMPU9255->ins_data.at(1), pMPU9255->ins_data.at(2),	 
 							  pMPU9255->ins_data.at(7), pMPU9255->ins_data.at(6), -pMPU9255->ins_data.at(8));
@@ -36,7 +40,8 @@ void * MySimpleTask( void * dummy )
 		RPY.at(1) = pMahonyFilter->getPitch();
 		RPY.at(2) = pMahonyFilter->getYaw();
 		pIPC->send(temp, 12);
-		printf("%f %f %f %f \n", RPY.at(0), RPY.at(1), RPY.at(2), pMPU9255->ins_data.at(6)*pMPU9255->ins_data.at(6) + pMPU9255->ins_data.at(7)*pMPU9255->ins_data.at(7) + pMPU9255->ins_data.at(8)*pMPU9255->ins_data.at(8));
+		//printf("%f %f %f %f \n", RPY.at(0), RPY.at(1), RPY.at(2), pMPU9255->ins_data.at(6)*pMPU9255->ins_data.at(6) + pMPU9255->ins_data.at(7)*pMPU9255->ins_data.at(7) + pMPU9255->ins_data.at(8)*pMPU9255->ins_data.at(8));
+		clock_nanosleep(CLOCK_REALTIME, 0, &ts, NULL);
 	}
 	return 0;
 }
@@ -57,7 +62,7 @@ int main(int argc, char ** argv) {
 	pMahonyFilter.reset(new Madgwick());
 	pMPU9255.reset(new SENSOR::mpu9255());
 	pCTRL.reset(new RASPI::controller(0x0c));
-	pIPC.reset(new RTOS::ipc_com(0x00, 0x01))
+	pIPC.reset(new RTOS::ipc_com(0x00, 0x01));
 
 	// Initialize SPI periph and pairing with stm32
 	bool ret = pMPU9255->init();
@@ -84,12 +89,11 @@ int main(int argc, char ** argv) {
 		printf("-- [INFO] Could not initialize I2C.\n");
 		return -1;
 	}
-	pCTRL->test_receive();
-	for (int i = 0; i < 32; i++)
-	{
-		printf("%s", pCTRL->receive[i]);
-	}
-	printf("/n");
+	char temp[6] = {0xff, 0x03, 0x02, 0x08, 0x02, 0x08};
+	char send_string[32];
+	memset(send_string, 0x00, 32);
+	memcpy(send_string, temp, 6);
+	pCTRL->test_send(send_string, 32);
 
 	int err;
 	printf("-- [INFO] Press any key to start\n");
