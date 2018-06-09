@@ -216,6 +216,7 @@ add_executable(
   src/mpu9255.cpp
   src/controller.cpp
   src/ipc_communication.cpp
+  src/KalmanFilter.cpp
 )
 
 target_link_libraries(
