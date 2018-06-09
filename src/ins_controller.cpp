@@ -8,6 +8,7 @@
 #include "MadgwickAHRS.h"
 #include "mpu9255.hpp"
 #include "controller.hpp"
+#include <math.h>
 #include <sstream>
 #include <fstream>
 
@@ -19,16 +20,24 @@ boost::shared_ptr<Madgwick> pMahonyFilter;
 boost::shared_ptr<SENSOR::mpu9255> pMPU9255;
 boost::shared_ptr<RASPI::controller> pCTRL;
 boost::shared_ptr<RTOS::ipc_com> pIPC;
+FILE * pFd;
 
 void * MySimpleTask( void * dummy )
 {
 	char ID = 0x00;
 	std::vector<float> RPY (3, 0);
-	char * temp = "Hello world.";
+	char temp[32];
 	char data[255];
 	struct timespec ts;
+	struct timespec r_ts;
+	float yaw = 0.0f;
+	int i = 0;
+	pCTRL->control_params.at(0) = 0.0f;
+	pCTRL->control_params.at(1) = 0.0;//0.3333333f;
 	ts.tv_sec = 0;
 	ts.tv_nsec = 500000; /* 0.5 ms */
+	r_ts.tv_sec = 0;
+	r_ts.tv_nsec = 2000000; /* 2 ms */
 	while( RTOS::ThreadRunning )
 	{
 		RTOS::WaitPeriodicPosixTask();
@@ -39,8 +48,38 @@ void * MySimpleTask( void * dummy )
 		RPY.at(0) = pMahonyFilter->getRoll();
 		RPY.at(1) = pMahonyFilter->getPitch();
 		RPY.at(2) = pMahonyFilter->getYaw();
-		pIPC->send(temp, 12);
+		//yaw = atan2(pMPU9255->ins_data.at(6), pMPU9255->ins_data.at(7))*57.29747f;
+		//pIPC->send(temp, 12);
 		//printf("%f %f %f %f \n", RPY.at(0), RPY.at(1), RPY.at(2), pMPU9255->ins_data.at(6)*pMPU9255->ins_data.at(6) + pMPU9255->ins_data.at(7)*pMPU9255->ins_data.at(7) + pMPU9255->ins_data.at(8)*pMPU9255->ins_data.at(8));
+		//printf("%f %f %f %f %f\n", yaw, RPY.at(2), pMPU9255->ins_data.at(6), pMPU9255->ins_data.at(7), pMPU9255->ins_data.at(8));
+		//clock_nanosleep(CLOCK_REALTIME, 0, &ts, NULL);
+
+		if (i < 100) {
+			i++;
+		}
+		else {
+			pCTRL->control_params.at(0) = 300.0f;
+		}
+
+		memset(temp, 0x00, 32);
+		temp[0] = 0xff;
+		temp[1] = 0x01;
+		pCTRL->test_send(temp ,32);
+		clock_nanosleep(CLOCK_REALTIME, 0, &r_ts, NULL);
+		pCTRL->get_pos();
+		printf("%f %f %f\n", pCTRL->current_state.at(0), pCTRL->current_state.at(1), pCTRL->current_pos.at(0));
+		pCTRL->estimate_pos();
+		if (pCTRL->current_pos.at(0) > 600) // millimeters
+		{
+			pCTRL->control_params.at(0) = 0.0;
+		}
+		//
+		// Main controller algorithm
+		//
+		clock_nanosleep(CLOCK_REALTIME, 0, &ts, NULL);
+		pCTRL->calculate_speed_for_motors();
+		pCTRL->serialization();
+		pCTRL->test_send(pCTRL->send, 32);
 		clock_nanosleep(CLOCK_REALTIME, 0, &ts, NULL);
 	}
 	return 0;
@@ -89,12 +128,8 @@ int main(int argc, char ** argv) {
 		printf("-- [INFO] Could not initialize I2C.\n");
 		return -1;
 	}
-	char temp[6] = {0xff, 0x03, 0x02, 0x08, 0x02, 0x08};
-	char send_string[32];
-	memset(send_string, 0x00, 32);
-	memcpy(send_string, temp, 6);
-	pCTRL->test_send(send_string, 32);
 
+	pFd = fopen("/home/pi/log_data1.txt", "w");
 	int err;
 	printf("-- [INFO] Press any key to start\n");
 	std::cin.get();
@@ -104,7 +139,7 @@ int main(int argc, char ** argv) {
 		return -1;
 	}
 	else {
-		printf("Press ESC to stop.\n"); 
+		printf("Press ESC to stop.\n");
 		while (std::cin.get() != 27)
 		{
 			sleep(0.5);
@@ -112,6 +147,8 @@ int main(int argc, char ** argv) {
 
 		RTOS::ThreadRunning = 0;
 	}
+
+	fclose(pFd);
 
 	return 0;
 

@@ -17,16 +17,27 @@ namespace RASPI {
 		bool init_i2c();
 		void get_pos();
 		void calculate_speed(float current_angle_ref, float current_speed_ref);
+		void serialization(void);
+		void kanamaya(float e2, float e3);
+		void calculate_speed_for_motors(void);
+		void estimate_pos(void);
 
 		void test_send(char * mess, uint8_t len);
 		void test_receive();
 		float target_angle_ref;
 		std::vector<float> current_pos;
+		std::vector<float> current_state;
+		std::vector<float> control_params;
+		std::vector<float> motor_params;
 		char receive[32];
 		char send[32];
 	private:
 		bool i2c_init;
 		std::vector<float> target_pos;
+		float Ky;
+		float Ko;
+		float L;
+		float W;
 		uint8_t slave_addr;
 	};
 }

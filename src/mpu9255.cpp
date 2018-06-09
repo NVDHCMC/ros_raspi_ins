@@ -12,9 +12,9 @@ namespace SENSOR {
 		this->ins_bias.at(3) = -0.61897;
 		this->ins_bias.at(4) =  0.313488;
 		this->ins_bias.at(5) =  0.317511;
-		this->ins_bias.at(6) = 18.9543;
-		this->ins_bias.at(7) = 58.757;
-		this->ins_bias.at(8) = -72.6253;
+		this->ins_bias.at(6) = -118.6717;
+		this->ins_bias.at(7) = 103.0839;
+		this->ins_bias.at(8) = -89.2867;
 	}
 
 	mpu9255::~mpu9255() {}
@@ -216,12 +216,16 @@ namespace SENSOR {
 		this->ins_data.at(3) = temp.at(4);
 		this->ins_data.at(4) = temp.at(5);
 		this->ins_data.at(5) = temp.at(6);
-		this->ins_data.at(6) = (temp.at(8)*0.9542f + temp.at(7)*(-0.1852f) - temp.at(9)*0.2348f)/1.176f;
-		this->ins_data.at(7) = (temp.at(8)*(-0.2963f) + temp.at(7)*(-0.4797f) - temp.at(9)*0.8259f)/1.0501f;
-		this->ins_data.at(8) = temp.at(8)*(-0.0403f) + temp.at(7)*(-0.8577f) + temp.at(9)*0.5126f;
+		this->ins_data.at(6) = temp.at(7);
+		this->ins_data.at(7) = temp.at(8);
+		this->ins_data.at(8) = temp.at(9);
 
-//		for (int i = 0; i < 9; i++) {
-//			this->ins_data.at(i) -= this->ins_bias.at(i);
-//		}
+
+		for (int i = 0; i < 8; i++) {
+			this->ins_data.at(i) -= this->ins_bias.at(i);
+		}
+		//this->ins_data.at(6) = (temp.at(8)*0.9542f + temp.at(7)*(-0.1852f) - temp.at(9)*0.2348f)/1.176f - this->ins_bias.at(6);
+		//this->ins_data.at(7) = (temp.at(8)*(-0.2963f) + temp.at(7)*(-0.4797f) - temp.at(9)*0.8259f)/1.0501f - this->ins_bias.at(7);
+		//this->ins_data.at(8) = temp.at(8)*(-0.0403f) + temp.at(7)*(-0.8577f) + temp.at(9)*0.5126f - this->ins_bias.at(8);
 	}
 }
